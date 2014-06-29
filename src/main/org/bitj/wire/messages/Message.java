@@ -1,4 +1,9 @@
-package org.bitj;
+package org.bitj.wire.messages;
+
+import org.bitj.utils.Crypto;
+import org.bitj.utils.Debug;
+import org.bitj.wire.BitcoinInputStream;
+import org.bitj.wire.BitcoinOutputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -24,7 +29,7 @@ public abstract class Message {
     out.flush();
   }
 
-  public static Message deserialize(InputStream is) throws IOException, IncompatibleProtocolVersion {
+  public static Message deserialize(InputStream is) throws IOException {
     BitcoinInputStream in = new BitcoinInputStream(is);
 
     in.readMagic(MAGIC_BYTES);
@@ -54,11 +59,15 @@ public abstract class Message {
       throw new InvalidChecksum("Invalid checksum " + Debug.bytesToHex(actualChecksum) + ", expected " + Debug.bytesToHex(expectedChecksum));
   }
 
-  private static Message deserializePayload(BitcoinInputStream in, String messageName) throws IOException, IncompatibleProtocolVersion {
+  private static Message deserializePayload(BitcoinInputStream in, String messageName) throws IOException {
     if (messageName.equals("version"))
       return VersionMessage.deserializePayload(in);
     if (messageName.equals("verack"))
       return VerackMessage.deserializePayload(in);
+    if (messageName.equals("getaddr"))
+      return GetAddrMessage.deserializePayload(in);
+    if (messageName.equals("addr"))
+      return AddrMessage.deserializePayload(in);
     throw new Unrecognized("Unknown message name " + messageName);  // TODO: introduce ProtocolException
   }
 

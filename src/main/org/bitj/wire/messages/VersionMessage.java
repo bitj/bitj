@@ -1,10 +1,14 @@
-package org.bitj;
+package org.bitj.wire.messages;
 
 import com.google.common.base.Objects;
 import com.google.common.io.BaseEncoding;
+import org.bitj.utils.Utils;
+import org.bitj.wire.BitcoinInputStream;
+import org.bitj.wire.BitcoinOutputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.util.Date;
 import java.util.Random;
 
@@ -20,7 +24,7 @@ public class VersionMessage extends Message {
   private long services = 1;
 
   // Standard UNIX timestamp in seconds
-  private long timestamp = new Date().getTime() / 1000;
+  private long timestamp = Utils.currentUnixTimestamp();
 
   // Node random nonce, randomly generated every time a version packet is sent. This nonce is used to detect connections to self
   private long nonce = Math.abs(new Random().nextLong());
@@ -44,8 +48,7 @@ public class VersionMessage extends Message {
 
   @Override
   public byte[] serializePayload() throws IOException {
-    ByteArrayOutputStream underlying = new ByteArrayOutputStream(192);
-    BitcoinOutputStream out = new BitcoinOutputStream(underlying);
+    BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(192));
     out.writeInt32LE(version);
     out.writeUnsignedInt64LE(services);
     out.writeUnsignedInt64LE(timestamp);
@@ -56,10 +59,10 @@ public class VersionMessage extends Message {
     out.writeInt32LE(startHeight);
     if (version >= 70001)
       out.write(relayToMeAllTransactions ? 1 : 0);
-    return underlying.toByteArray();
+    return out.toByteArray();
   }
 
-  public static VersionMessage deserializePayload(BitcoinInputStream in) throws IOException, IncompatibleProtocolVersion {
+  public static VersionMessage deserializePayload(BitcoinInputStream in) throws IOException {
     int version = in.readInt32LE();
     throwIfPeerVersionIsTooLow(version);
     long services = in.readInt64LE();
@@ -82,9 +85,9 @@ public class VersionMessage extends Message {
       .get();
   }
 
-  private static void throwIfPeerVersionIsTooLow(int version) {
+  private static void throwIfPeerVersionIsTooLow(int version) throws Incompatible {
     if (version < MIN_PROTOCOL_VERSION)
-      throw new IncompatibleProtocolVersion("Peer protocol version is " + version + " < " + MIN_PROTOCOL_VERSION);
+      throw new VersionMessage.Incompatible("Peer protocol version is " + version + " < " + MIN_PROTOCOL_VERSION);
   }
 
   public int getVersion() {
@@ -158,6 +161,12 @@ public class VersionMessage extends Message {
     public Builder userAgent(String postfix) { versionMessage.userAgent += "/" + postfix; return this; }
     public Builder startHeight(int startHeight) { versionMessage.startHeight = startHeight; return this; }
     public Builder relayToMeAllTransactions(boolean relay) { versionMessage.relayToMeAllTransactions = relay; return this; }
+  }
+
+  public static class Incompatible extends ProtocolException {
+    public Incompatible(String message) {
+      super(message);
+    }
   }
 
 }

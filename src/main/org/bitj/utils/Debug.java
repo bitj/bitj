@@ -1,16 +1,6 @@
-package org.bitj;
+package org.bitj.utils;
 
 public class Debug {
-
-  public static String toString(byte[] bytes) {
-    StringBuilder sb = new StringBuilder("[");
-    for (byte b : bytes) {
-      sb.append(0xff & b);
-      sb.append(",");
-    }
-    sb.replace(sb.length()-1, sb.length(), "]");
-    return sb.toString();
-  }
 
   public static byte[] hexToBytes(String s) {
     s = s.replaceAll("[^a-fA-F0-9]", "");

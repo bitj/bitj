@@ -1,10 +1,12 @@
-package org.bitj;
+package org.bitj.wire.messages;
 
 import com.google.common.base.Objects;
+import org.bitj.wire.BitcoinInputStream;
 
 import java.io.IOException;
 
 public class VerackMessage extends Message {
+
   private static VerackMessage instance;
 
   @Override

@@ -1,5 +1,7 @@
 package org.bitj;
 
+import org.bitj.wire.messages.*;
+
 import java.io.*;
 import java.net.*;
 import java.util.logging.Logger;
@@ -18,7 +20,13 @@ public class Peer {
     createSocket();
   }
 
-  public void connect(InetAddress address, int port) throws IOException, IncompatibleProtocolVersion {
+  private void createSocket() throws SocketException {
+    socket = new Socket();
+    socket.setSoTimeout(10000);
+    socket.setKeepAlive(true);
+  }
+
+  public void connect(InetAddress address, int port) throws IOException {
     try {
       socket.connect(new InetSocketAddress(address, port));
       out = new BufferedOutputStream(socket.getOutputStream());
@@ -27,6 +35,8 @@ public class Peer {
       receiveVersion();
       sendVerack();
       receiveVerack();
+      sendGetAddr();
+      receiveAddr();
     } finally {
       closeSocket();
     }
@@ -38,7 +48,7 @@ public class Peer {
     myVersion.serialize(out);
   }
 
-  private void receiveVersion() throws IOException, IncompatibleProtocolVersion {
+  private void receiveVersion() throws IOException {
     Message message = Message.deserialize(in);
     if (!(message instanceof VersionMessage))
       throw new ProtocolException("Expected VersionMessage, got " + message.toString());
@@ -59,10 +69,15 @@ public class Peer {
     System.out.println("Received: " + message);
   }
 
-  private void createSocket() throws SocketException {
-    socket = new Socket();
-    socket.setSoTimeout(1000);
-    socket.setKeepAlive(true);
+  private void sendGetAddr() throws IOException {
+    GetAddrMessage msg = GetAddrMessage.getInstance();
+    System.out.println("Sending: " + msg);
+    msg.serialize(out);
+  }
+
+  private void receiveAddr() throws IOException {
+    AddrMessage msg = (AddrMessage) Message.deserialize(in);
+    System.out.println(msg);
   }
 
   private void closeSocket() {

@@ -1,6 +1,9 @@
-package org.bitj;
+package org.bitj.wire.messages;
 
 import com.google.common.primitives.Bytes;
+import org.bitj.BaseTest;
+import org.bitj.utils.Debug;
+import org.bitj.wire.BitcoinInputStream;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -62,10 +65,10 @@ public class MessageTest extends BaseTest {
   public void deserializes_WhenGarbageBytesPreceedTheMessage() throws Exception {
     byte[] headerBytes = Debug.hexToBytes(
       "00 00 00 00" +  // garbage
-      "F9 00 00 00" +  // garbage
-      "F9 BE 00 00" +  // garbage
-      "F9 BE B4 00" +  // garbage
-      "F9 BE B4 D9" +  // magic, finally
+        "F9 00 00 00" +  // garbage
+        "F9 BE 00 00" +  // garbage
+        "F9 BE B4 00" +  // garbage
+        "F9 BE B4 D9" +  // magic, finally
         "76 65 72 61 63 6B 00 00 00 00 00 00" +
         "00 00 00 00" +
         "5D F6 E0 E2"

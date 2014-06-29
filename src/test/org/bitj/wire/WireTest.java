@@ -1,5 +1,7 @@
-package org.bitj;
+package org.bitj.wire;
 
+import org.bitj.BaseTest;
+import org.bitj.wire.Wire;
 import org.testng.annotations.Test;
 
 import java.math.BigInteger;
@@ -19,6 +21,27 @@ public class WireTest extends BaseTest {
     assertEquals( Wire.int32ToBytesLE(Integer.MAX_VALUE), bytes(255, 255, 255, 127) );
     assertEquals( Wire.int32ToBytesLE(Integer.MIN_VALUE), bytes(0, 0, 0, 128) );
     assertEquals( Wire.int32ToBytesLE(-1), bytes(255, 255, 255, 255) );
+  }
+
+  // unsignedInt16ToBytesBE
+
+  @Test
+  public void unsignedInt16ToBytesBE() throws Exception {
+    assertEquals( Wire.unsignedInt16ToBytesBE(0),     bytes(0, 0) );
+    assertEquals( Wire.unsignedInt16ToBytesBE(1),     bytes(0, 1) );
+    assertEquals( Wire.unsignedInt16ToBytesBE(256),   bytes(1, 0) );
+    assertEquals( Wire.unsignedInt16ToBytesBE(65534), bytes(255, 254) );
+    assertEquals( Wire.unsignedInt16ToBytesBE(65535), bytes(255, 255) );
+  }
+
+  @Test( expectedExceptions = IllegalArgumentException.class )
+  public void unsignedInt16ToBytesBE_WhenValueIsToSmall() throws Exception {
+    Wire.unsignedInt16ToBytesBE(-1);
+  }
+
+  @Test( expectedExceptions = IllegalArgumentException.class )
+  public void unsignedInt16ToBytesBE_WhenValueToLarge() throws Exception {
+    Wire.unsignedInt16ToBytesBE(65536);
   }
 
   // unsignedInt16ToBytesLE
@@ -67,6 +90,11 @@ public class WireTest extends BaseTest {
 
   // unsignedInt64ToBytesLE
 
+  @Test(expectedExceptions = IllegalArgumentException.class)
+  public void unsignedInt64ToBytesLE_WhenArgumentIsNegative() throws Exception {
+    Wire.unsignedInt64ToBytesLE(-1);
+  }
+
   @Test
   public void unsignedInt64ToBytesLE() throws Exception {
     assertEquals( Wire.unsignedInt64ToBytesLE(new BigInteger("0")),             bytes(0, 0, 0, 0, 0, 0, 0, 0) );
@@ -103,6 +131,11 @@ public class WireTest extends BaseTest {
   }
 
   // unsignedIntToVarBytes
+
+  @Test(expectedExceptions = IllegalArgumentException.class)
+  public void unsignedInt64ToVarBytes_WhenArgumentIsNegative() throws Exception {
+    Wire.unsignedIntToVarBytes(-1);
+  }
 
   @Test
   public void unsignedInt64ToVarBytes() throws Exception {

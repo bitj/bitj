@@ -1,4 +1,4 @@
-package org.bitj;
+package org.bitj.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

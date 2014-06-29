@@ -1,11 +1,17 @@
-package org.bitj;
+package org.bitj.wire.messages;
 
+import org.bitj.BaseTest;
+import org.bitj.utils.Debug;
+import org.bitj.wire.BitcoinInputStream;
+import org.bitj.wire.messages.VersionMessage;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.ProtocolException;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class VersionMessageTest extends BaseTest {
 
@@ -22,13 +28,13 @@ public class VersionMessageTest extends BaseTest {
 
   public static byte[] PAYLOAD1_BYTES = Debug.hexToBytes(
     "9C 7C 00 00" +
-    "01 00 00 00 00 00 00 00" +
-    "E6 15 10 4D 00 00 00 00" +
-    "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF FF 7F 00 00 01 20 8D" +
-    "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF FF 7F 00 00 01 20 8D" +
-    "DD 9D 20 2C 3A B4 57 13" +
-    "00" +
-    "55 81 01 00"
+      "01 00 00 00 00 00 00 00" +
+      "E6 15 10 4D 00 00 00 00" +
+      "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF FF 7F 00 00 01 20 8D" +
+      "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF FF 7F 00 00 01 20 8D" +
+      "DD 9D 20 2C 3A B4 57 13" +
+      "00" +
+      "55 81 01 00"
   );
 
   // Second example from https://en.bitcoin.it/wiki/Protocol_specification#version
@@ -65,12 +71,12 @@ public class VersionMessageTest extends BaseTest {
     assertEquals(VersionMessage.deserializePayload(bitcoinStream(PAYLOAD2_BYTES)), MESSAGE2);
   }
 
-  @Test(expectedExceptions = IncompatibleProtocolVersion.class)
+  @Test(expectedExceptions = VersionMessage.Incompatible.class)
   public void deserializePayload_WhenProtocolVersionIsTooLow() throws IOException {
     VersionMessage.deserializePayload(bitcoinStream(0x9B, 0x7C, 0, 0));  // 31899
   }
 
-  @Test(expectedExceptions = VarStringTooLarge.class)
+  @Test(expectedExceptions = ProtocolException.class)
   public void deserializePayload_WhenUserAgentStringIsTooLarge() throws IOException {
     byte[] maliciousPayload = new byte[PAYLOAD2_BYTES.length];
     System.arraycopy(PAYLOAD2_BYTES, 0, maliciousPayload, 0, PAYLOAD2_BYTES.length);
@@ -90,6 +96,11 @@ public class VersionMessageTest extends BaseTest {
     BitcoinInputStream in = new BitcoinInputStream(new ByteArrayInputStream(bytes));
     VersionMessage deserialized = VersionMessage.deserializePayload(in);
     assertEquals(version, deserialized);
+  }
+
+  @Test
+  public void toStringImplemented() throws Exception {
+    assertTrue(MESSAGE1.toString().contains("VersionMessage{"));
   }
 
 }

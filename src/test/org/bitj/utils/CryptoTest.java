@@ -1,5 +1,7 @@
-package org.bitj;
+package org.bitj.utils;
 
+import org.bitj.BaseTest;
+import org.bitj.utils.Crypto;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;

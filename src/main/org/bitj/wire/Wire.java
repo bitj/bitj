@@ -1,10 +1,12 @@
-package org.bitj;
+package org.bitj.wire;
 
 import com.google.common.primitives.Bytes;
 import com.google.common.primitives.UnsignedLongs;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 
 public class Wire {
 
@@ -18,6 +20,15 @@ public class Wire {
       (byte) (0xFF & (val >>> 8)),
       (byte) (0xFF & (val >>> 16)),
       (byte) (0xFF & (val >>> 24))
+    };
+  }
+
+  public static byte[] unsignedInt16ToBytesBE(int val) {
+    if (val < 0 || val > MAX_UINT16)
+      throw new IllegalArgumentException("" + val + " must be in range [0," + MAX_UINT16 + "]");
+    return new byte[] {
+      (byte) (0xFF & (val >>> 8)),
+      (byte) (0xFF & val)
     };
   }
 

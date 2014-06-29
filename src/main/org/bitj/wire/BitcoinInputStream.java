@@ -1,15 +1,25 @@
-package org.bitj;
+package org.bitj.wire;
+
+import org.bitj.utils.Debug;
 
 import java.io.EOFException;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.ProtocolException;
 
 public class BitcoinInputStream extends FilterInputStream {
 
   public BitcoinInputStream(InputStream is) {
     super(is);
+  }
+
+  public int readUnsignedInt16BE() throws IOException {
+    byte[] bytes = new byte[2];
+    readFully(bytes);
+    return ((0xFF & bytes[0]) << 8) + (0xFF & bytes[1]);
   }
 
   public int readUnsignedInt16LE() throws IOException {
@@ -56,7 +66,7 @@ public class BitcoinInputStream extends FilterInputStream {
       ((0xFFL & bytes[7]) << 56);
   }
 
-  public BigInteger readVarUnsignedInt() throws IOException {
+  public BigInteger readUnsignedVarInt() throws IOException {
     int b = read();
     if (b == -1)
       throw new EOFException();
@@ -72,9 +82,9 @@ public class BitcoinInputStream extends FilterInputStream {
   }
 
   public String readVarString(long max) throws IOException {
-    BigInteger length = readVarUnsignedInt();
+    BigInteger length = readUnsignedVarInt();
     if (length.compareTo(BigInteger.valueOf(max)) > 0  ||  length.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0)
-      throw new VarStringTooLarge("VarString too large " + length + " > " + max + " bytes");
+      throw new ProtocolException("VarString too large " + length + " > " + max + " bytes");
     byte[] bytes = new byte[length.intValue()];
     readFully(bytes);
     return new String(bytes, "UTF-8");
@@ -104,6 +114,10 @@ public class BitcoinInputStream extends FilterInputStream {
       else
         i = 0;
     }
+  }
+
+  public InetAddress readIP() throws IOException {
+    return InetAddress.getByAddress(readBytes(16));
   }
 
   public byte[] readBytes(int n) throws IOException {

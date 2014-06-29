@@ -1,5 +1,9 @@
 package org.bitj;
 
+import org.bitj.utils.Debug;
+import org.bitj.wire.BitcoinInputStream;
+import org.bitj.wire.messages.Message;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,6 +27,10 @@ public class BaseTest {
 
   public static BitcoinInputStream bitcoinStream(byte[] bytes) {
     return new BitcoinInputStream(new ByteArrayInputStream(bytes));
+  }
+
+  public static BitcoinInputStream bitcoinStream(String hexes) {
+    return bitcoinStream(Debug.hexToBytes(hexes));
   }
 
   public static ByteArrayInputStream byteStream(int... iBytes) {
