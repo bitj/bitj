@@ -90,11 +90,11 @@ public class BitcoinInputStream extends FilterInputStream {
     return new String(bytes, "UTF-8");
   }
 
-  public String readPaddedAsciiString(int targetLength) throws IOException {
-    if (targetLength == 0) return "";
-    byte[] bytes = new byte[targetLength];
+  public String readPaddedAsciiString(int paddedLength) throws IOException {
+    if (paddedLength == 0) return "";
+    byte[] bytes = new byte[paddedLength];
     readFully(bytes);
-    for (int endIx = 0; endIx < targetLength; endIx++)
+    for (int endIx = 0; endIx < paddedLength; endIx++)
       if (bytes[endIx] == 0)
         return new String(bytes, 0, endIx, "ASCII");
     return new String(bytes, "ASCII");

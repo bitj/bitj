@@ -64,6 +64,8 @@ public abstract class Message {
       return VersionMessage.deserializePayload(in);
     if (messageName.equals("verack"))
       return VerackMessage.deserializePayload(in);
+    if (messageName.equals("inv"))
+      return InvMessage.deserializePayload(in);
     if (messageName.equals("getaddr"))
       return GetAddrMessage.deserializePayload(in);
     if (messageName.equals("addr"))

@@ -7,6 +7,7 @@ import org.bitj.wire.messages.Message;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Random;
 
 public class BaseTest {
 
@@ -19,6 +20,12 @@ public class BaseTest {
       bBytes[i] = (byte) iByte;
     }
     return bBytes;
+  }
+
+  public static byte[] randomBytes(int n) {
+    byte[] b = new byte[n];
+    new Random().nextBytes(b);
+    return b;
   }
 
   public static BitcoinInputStream bitcoinStream(int... iBytes) {

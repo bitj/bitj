@@ -5,8 +5,6 @@ import com.google.common.primitives.UnsignedLongs;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.net.Inet4Address;
-import java.net.InetAddress;
 
 public class Wire {
 

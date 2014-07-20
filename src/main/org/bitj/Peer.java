@@ -4,69 +4,96 @@ import org.bitj.wire.messages.*;
 
 import java.io.*;
 import java.net.*;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 
 public class Peer {
 
+  static enum ClientState { AWAITING_VERSION, AWAITING_VERACK }
+
+  private static final long SLEEP_TIME = 100;
+
   private static Logger log = Logger.getLogger(Peer.class.getName());
 
+  private InetSocketAddress socketAddress;
   private Socket socket;
-  private OutputStream out;
   private InputStream in;
+  private OutputStream out;
 
   private VersionMessage version;
 
-  public Peer() throws SocketException {
-    createSocket();
-  }
+  private Queue jobs = new ConcurrentLinkedQueue<String>();
 
-  private void createSocket() throws SocketException {
+  public Peer(InetAddress address, int port) throws SocketException {
+    socketAddress = new InetSocketAddress(address, port);
     socket = new Socket();
     socket.setSoTimeout(10000);
     socket.setKeepAlive(true);
   }
 
-  public void connect(InetAddress address, int port) throws IOException {
+  public void connect() throws IOException, InterruptedException {
     try {
-      socket.connect(new InetSocketAddress(address, port));
-      out = new BufferedOutputStream(socket.getOutputStream());
-      in = new BufferedInputStream(socket.getInputStream());
-      sendVersion();
-      receiveVersion();
-      sendVerack();
-      receiveVerack();
-      sendGetAddr();
-      receiveAddr();
+      connectToSocket();
+      handshake();
+      eventLoop();
     } finally {
       closeSocket();
     }
   }
 
-  private void sendVersion() throws IOException {
-    VersionMessage myVersion = new VersionMessage.Builder().get();
-    System.out.println("Sending: " + myVersion);
-    myVersion.serialize(out);
+  private void connectToSocket() throws IOException {
+    socket.connect(socketAddress);
+    out = new BufferedOutputStream(socket.getOutputStream());
+    in = new BufferedInputStream(socket.getInputStream());
   }
 
-  private void receiveVersion() throws IOException {
-    Message message = Message.deserialize(in);
-    if (!(message instanceof VersionMessage))
-      throw new ProtocolException("Expected VersionMessage, got " + message.toString());
-    version = (VersionMessage) message;
-    System.out.println("Received: " + version);
+  private void handshake() throws IOException {
+    version = new ClientHandshaker(in, out).handshake();
   }
 
-  private void sendVerack() throws IOException {
-    VerackMessage verack = VerackMessage.getInstance();
-    System.out.println("Sending: " + verack);
-    verack.serialize(out);
+  public void eventLoop() throws IOException, InterruptedException {
+    while (true) {
+      if (messageAvailable())
+        handleMessage();
+      if (jobAvailable())
+        handleJob();
+      Thread.sleep(SLEEP_TIME);
+    }
   }
 
-  private void receiveVerack() throws IOException {
-    Message message = Message.deserialize(in);
-    if (!(message instanceof VerackMessage))
-      throw new ProtocolException("Expected VerackMessage, got " + message.toString());
-    System.out.println("Received: " + message);
+  private boolean messageAvailable() throws IOException {
+    return in.available() > 0;
+  }
+
+  private void handleMessage() throws IOException {
+    Message msg = Message.deserialize(in);
+    handle(msg);
+  }
+
+  private boolean jobAvailable() {
+    return jobs.size() > 0;
+  }
+
+  private void handleJob() {
+    Object job = jobs.remove();
+    handle(job);
+  }
+
+  private void handle(Message msg) throws ProtocolException {
+    // Peer is a client
+    if (msg instanceof VersionMessage)
+      throw new ProtocolException("Unexpected VersionMessage after handshake: " + msg.toString());
+    if (msg instanceof InvMessage)
+      ignore(msg);
+  }
+
+  private void handle(Object job) {
+    // TODO: implement
+  }
+
+  private void ignore(Message msg) {
+    System.out.println("Ignoring: " + msg.toString());
   }
 
   private void sendGetAddr() throws IOException {
