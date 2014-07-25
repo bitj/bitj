@@ -1,6 +1,5 @@
 package org.bitj.wire.messages;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import org.bitj.wire.BitcoinInputStream;
 import org.bitj.wire.BitcoinOutputStream;
@@ -10,6 +9,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.ProtocolException;
+import java.util.Objects;
+
+import static com.google.common.base.Objects.ToStringHelper;
+import static com.google.common.base.Objects.toStringHelper;
 
 public class AddrMessage extends Message {
 
@@ -45,9 +48,8 @@ public class AddrMessage extends Message {
 
   @Override
   public String toString() {
-    Objects.ToStringHelper helper = Objects.toStringHelper(this);
-    for (PeerAddress peerAddress : peers)
-      helper.add("net_addr", peerAddress);
+    ToStringHelper helper = toStringHelper(this);
+    peers.forEach(peerAddress -> helper.add("net_addr", peerAddress));
     return helper.toString();
   }
 
@@ -56,13 +58,12 @@ public class AddrMessage extends Message {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     AddrMessage that = (AddrMessage) o;
-    if (peers != null ? !peers.equals(that.peers) : that.peers != null) return false;
-    return true;
+    return Objects.equals(this.peers, that.peers);
   }
 
   @Override
   public int hashCode() {
-    return peers != null ? peers.hashCode() : 0;
+    return Objects.hashCode(peers);
   }
 
   public ImmutableSet<PeerAddress> getPeers() {

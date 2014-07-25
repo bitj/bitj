@@ -1,10 +1,11 @@
 package org.bitj.wire;
 
-import com.google.common.base.Objects;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Objects;
+
+import static com.google.common.base.Objects.toStringHelper;
 
 public class PeerAddress {
 
@@ -33,7 +34,7 @@ public class PeerAddress {
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this)
+    return toStringHelper(this)
       .add("ip", ip)
       .add("port", port)
       .add("timestampOfTheLastMessage", timestampOfTheLastMessage)
@@ -46,15 +47,15 @@ public class PeerAddress {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     PeerAddress that = (PeerAddress) o;
-    return Objects.equal(this.ip, that.ip) &&
-      Objects.equal(this.timestampOfTheLastMessage, that.timestampOfTheLastMessage) &&
-      Objects.equal(this.services, that.services) &&
-      Objects.equal(this.port, that.port);
+    return Objects.equals(this.ip, that.ip) &&
+      Objects.equals(this.timestampOfTheLastMessage, that.timestampOfTheLastMessage) &&
+      Objects.equals(this.services, that.services) &&
+      Objects.equals(this.port, that.port);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(ip, timestampOfTheLastMessage, services, port);
+    return Objects.hash(ip, timestampOfTheLastMessage, services, port);
   }
 
   public long getTimestampOfTheLastMessage() {

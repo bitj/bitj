@@ -1,12 +1,13 @@
 package org.bitj.wire;
 
-import com.google.common.base.Objects;
 import org.bitj.utils.Debug;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.Arrays;
+import java.util.Objects;
+import static com.google.common.base.Objects.toStringHelper;
 
 public class InvItem {
 
@@ -52,7 +53,7 @@ public class InvItem {
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this)
+    return toStringHelper(this)
       .add("type", type)
       .add("hash", Debug.bytesToHex(hash).replaceAll(" ", ""))
       .toString();
@@ -63,12 +64,12 @@ public class InvItem {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     InvItem that = (InvItem) o;
-    return Objects.equal(this.type, that.type) && Arrays.equals(this.hash, that.hash);
+    return Objects.equals(this.type, that.type) && Arrays.equals(this.hash, that.hash);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(type, Arrays.hashCode(hash));
+    return Objects.hash(type, Arrays.hashCode(hash));
   }
 
 }

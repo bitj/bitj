@@ -1,9 +1,10 @@
 package org.bitj.wire.messages;
 
-import com.google.common.base.Objects;
 import org.bitj.wire.BitcoinInputStream;
 
 import java.io.IOException;
+
+import static com.google.common.base.Objects.toStringHelper;
 
 public class VerackMessage extends Message {
 
@@ -25,7 +26,7 @@ public class VerackMessage extends Message {
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this.getClass()).toString();
+    return toStringHelper(this.getClass()).toString();
   }
 
   @Override

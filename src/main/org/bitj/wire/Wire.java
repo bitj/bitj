@@ -3,8 +3,10 @@ package org.bitj.wire;
 import com.google.common.primitives.Bytes;
 import com.google.common.primitives.UnsignedLongs;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+
+import static org.bitj.utils.Utils.getBytesASCII;
+import static org.bitj.utils.Utils.getBytesUTF8;
 
 public class Wire {
 
@@ -79,13 +81,9 @@ public class Wire {
   }
 
   public static byte[] stringToVarBytes(String s) {
-    try {
-      byte[] sBytes = s.getBytes("UTF-8");
-      byte[] sLen = unsignedIntToVarBytes(sBytes.length);
-      return Bytes.concat(sLen, sBytes);
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e); // cannot happen
-    }
+    byte[] sBytes = getBytesUTF8(s);
+    byte[] sLen = unsignedIntToVarBytes(sBytes.length);
+    return Bytes.concat(sLen, sBytes);
   }
 
   public static byte[] unsignedIntToVarBytes(long val) {
@@ -114,15 +112,11 @@ public class Wire {
 
   public static byte[] asciiStringToBytesPaddedWith0(String s, int targetLength) {
     byte[] bytes = new byte[targetLength];
-    try {
-      byte[] sBytes = s.getBytes("ASCII");
-      if (sBytes.length > targetLength)
-        throw new IllegalArgumentException("String " + s + " cannot be longer than its target length " + targetLength);
-      System.arraycopy(sBytes, 0, bytes, 0, sBytes.length);
-      return bytes;
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);  // cannot happen
-    }
+    byte[] sBytes = getBytesASCII(s);
+    if (sBytes.length > targetLength)
+      throw new IllegalArgumentException("String " + s + " cannot be longer than its target length " + targetLength);
+    System.arraycopy(sBytes, 0, bytes, 0, sBytes.length);
+    return bytes;
   }
 
 }

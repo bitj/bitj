@@ -6,7 +6,10 @@ import java.util.Arrays;
 
 public class Crypto {
 
-  public static byte[] checksum(byte[] payload) {
+  /**
+   * Bitcoin checksum is the first 4 bytes of the double SHA-256.
+   */
+  public static byte[] bitcoinChecksum(byte[] payload) {
     try {
       MessageDigest md = MessageDigest.getInstance("SHA-256");
       byte[] doubleHash = md.digest(md.digest(payload));

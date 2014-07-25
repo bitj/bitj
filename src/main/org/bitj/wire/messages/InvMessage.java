@@ -1,6 +1,5 @@
 package org.bitj.wire.messages;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import org.bitj.wire.BitcoinInputStream;
 import org.bitj.wire.BitcoinOutputStream;
@@ -10,6 +9,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.ProtocolException;
+import java.util.Objects;
+
+import static com.google.common.base.Objects.ToStringHelper;
+import static com.google.common.base.Objects.toStringHelper;
 
 public class InvMessage extends Message {
 
@@ -45,7 +48,7 @@ public class InvMessage extends Message {
 
   @Override
   public String toString() {
-    Objects.ToStringHelper helper = Objects.toStringHelper(this);
+    ToStringHelper helper = toStringHelper(this);
     for (InvItem invItem : invItems)
       helper.add("inv_item", invItem);
     return helper.toString();
@@ -57,7 +60,7 @@ public class InvMessage extends Message {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(invItems);
+    return Objects.hash(invItems);
   }
 
   @Override
@@ -65,7 +68,7 @@ public class InvMessage extends Message {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     InvMessage that = (InvMessage) o;
-    return Objects.equal(this.invItems, that.invItems);
+    return Objects.equals(this.invItems, that.invItems);
   }
 
   // TODO: check what should be the actual max

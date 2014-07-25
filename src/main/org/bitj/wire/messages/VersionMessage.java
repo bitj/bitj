@@ -1,6 +1,5 @@
 package org.bitj.wire.messages;
 
-import com.google.common.base.Objects;
 import com.google.common.io.BaseEncoding;
 import org.bitj.utils.Utils;
 import org.bitj.wire.BitcoinInputStream;
@@ -10,7 +9,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Random;
+
+import static com.google.common.base.Objects.toStringHelper;
 
 public class VersionMessage extends Message {
 
@@ -116,7 +118,7 @@ public class VersionMessage extends Message {
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this.getClass())
+    return toStringHelper(this.getClass())
       .add("version", version)
       .add("services", services)
       .add("timestamp", new Date(timestamp * 1000))
@@ -132,18 +134,18 @@ public class VersionMessage extends Message {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     VersionMessage that = (VersionMessage) o;
-    return Objects.equal(this.version, that.version) &&
-      Objects.equal(this.services, that.services) &&
-      Objects.equal(this.timestamp, that.timestamp) &&
-      Objects.equal(this.nonce, that.nonce) &&
-      Objects.equal(this.userAgent, that.userAgent) &&
-      Objects.equal(this.startHeight, that.startHeight) &&
-      Objects.equal(this.relayToMeAllTransactions, that.relayToMeAllTransactions);
+    return Objects.equals(this.version, that.version) &&
+      Objects.equals(this.services, that.services) &&
+      Objects.equals(this.timestamp, that.timestamp) &&
+      Objects.equals(this.nonce, that.nonce) &&
+      Objects.equals(this.userAgent, that.userAgent) &&
+      Objects.equals(this.startHeight, that.startHeight) &&
+      Objects.equals(this.relayToMeAllTransactions, that.relayToMeAllTransactions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(version, services, timestamp, nonce, userAgent, startHeight, relayToMeAllTransactions);
+    return Objects.hash(version, services, timestamp, nonce, userAgent, startHeight, relayToMeAllTransactions);
   }
 
   public static class Builder {
