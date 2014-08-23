@@ -1,5 +1,6 @@
 package org.bitj;
 
+import com.google.common.collect.ImmutableList;
 import org.bitj.wire.messages.*;
 
 import java.io.*;
@@ -10,7 +11,7 @@ import java.util.logging.Logger;
 
 public class Peer {
 
-  static enum ClientState { AWAITING_VERSION, AWAITING_VERACK }
+  static enum ClientState { NEUTRAL, AWAITING_VERSION, AWAITING_VERACK, AWAITING_INV }
 
   private static final long SLEEP_TIME = 100;
 
@@ -24,6 +25,8 @@ public class Peer {
   private VersionMessage version;
 
   private Queue jobs = new ConcurrentLinkedQueue<String>();
+
+  private ClientState state = ClientState.NEUTRAL;
 
   public Peer(InetAddress address, int port) throws SocketException {
     socketAddress = new InetSocketAddress(address, port);
@@ -56,7 +59,7 @@ public class Peer {
     while (true) {
       if (messageAvailable())
         handleMessage();
-      if (jobAvailable())
+      if (state == ClientState.NEUTRAL && jobAvailable())
         handleJob();
       Thread.sleep(SLEEP_TIME);
     }
@@ -68,32 +71,50 @@ public class Peer {
 
   private void handleMessage() throws IOException {
     Message msg = Message.deserialize(in);
-    handle(msg);
+    // Peer is a client
+    if (msg instanceof VersionMessage)
+      throw new ProtocolException("Unexpected VersionMessage after handshake: " + msg.toString());
+    if (msg instanceof VerackMessage)
+      throw new ProtocolException("Unexpected VerackMessage after handshake: " + msg.toString());
+    if (msg instanceof InvMessage)
+      if (state == ClientState.AWAITING_INV)
+        handle((InvMessage) msg);
+      else
+        ignore(msg);
   }
 
   private boolean jobAvailable() {
     return jobs.size() > 0;
   }
 
-  private void handleJob() {
-    Object job = jobs.remove();
-    handle(job);
+  private void handleJob() throws IOException {
+    handle(jobs.remove());
   }
 
-  private void handle(Message msg) throws ProtocolException {
-    // Peer is a client
-    if (msg instanceof VersionMessage)
-      throw new ProtocolException("Unexpected VersionMessage after handshake: " + msg.toString());
-    if (msg instanceof InvMessage)
-      ignore(msg);
-  }
-
-  private void handle(Object job) {
-    // TODO: implement
+  private void handle(Object job) throws IOException {
+    if (job instanceof String && job.equals(DOWNLOAD_BLOCKCHAIN))
+      doDownloadBlockchain();
   }
 
   private void ignore(Message msg) {
     System.out.println("Ignoring: " + msg.toString());
+  }
+
+  public void queueJobDownloadBlockchain() {
+    jobs.add(DOWNLOAD_BLOCKCHAIN);
+  }
+
+  private void doDownloadBlockchain() throws IOException {
+    System.out.println("Downloading blockchain...");
+    ImmutableList<Sha256Hash> blockLocator = App.getInstance().getBlockchain().getDefaultBlockLocator();
+    GetBlocksMessage msg = new GetBlocksMessage(blockLocator);
+    System.out.println("Sending: " + msg);
+    msg.serialize(out);
+    state = ClientState.AWAITING_INV;
+  }
+
+  private void handle(InvMessage msg) {
+    System.out.println("Handling " + msg);
   }
 
   private void sendGetAddr() throws IOException {
@@ -114,5 +135,7 @@ public class Peer {
       log.warning("Socket closed unclean: " + e.getMessage());
     }
   }
+
+  public static final String DOWNLOAD_BLOCKCHAIN = "download-blockchain";
 
 }

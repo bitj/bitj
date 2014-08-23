@@ -1,7 +1,6 @@
 package org.bitj.wire;
 
 import org.bitj.BaseTest;
-import org.bitj.wire.BitcoinInputStream;
 import org.bitj.wire.messages.Message;
 import org.testng.annotations.Test;
 

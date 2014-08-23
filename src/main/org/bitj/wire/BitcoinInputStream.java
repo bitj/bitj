@@ -1,5 +1,6 @@
 package org.bitj.wire;
 
+import org.bitj.Sha256Hash;
 import org.bitj.utils.Debug;
 
 import java.io.EOFException;
@@ -124,6 +125,12 @@ public class BitcoinInputStream extends FilterInputStream {
     byte[] bytes = new byte[n];
     readFully(bytes);
     return bytes;
+  }
+
+  public Sha256Hash readSha256Hash() throws IOException {
+    byte[] bts = readBytes(32);
+    Wire.reverseBytesInPlace(bts);
+    return new Sha256Hash(bts);
   }
 
   public void readFully(byte bytes[]) throws IOException {

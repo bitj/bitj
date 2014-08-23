@@ -1,14 +1,13 @@
 package org.bitj;
 
 import java.io.IOException;
-import java.net.InetAddress;
+import java.sql.SQLException;
 
 public class Main {
 
-  public static void main(String[] args) throws IOException, InterruptedException {
-    InetAddress localhost = InetAddress.getByName("127.0.0.1");
-    Peer peer = new Peer(localhost, 8333);
-    peer.connect();
+  public static void main(String[] args) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+    App.getInstance().run();
+    System.out.println("Main.main end");
   }
 
 }

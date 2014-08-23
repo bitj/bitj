@@ -14,7 +14,7 @@ public class Debug {
   public static String bytesToHex(byte[] bytes) {
     StringBuilder sb = new StringBuilder(bytes.length * 3);
     for (byte b : bytes)
-      sb.append(String.format("%02X ", b));
+      sb.append(String.format("%02x ", b));
     return sb.substring(0, sb.length()-1);  // trims trailing space
   }
 

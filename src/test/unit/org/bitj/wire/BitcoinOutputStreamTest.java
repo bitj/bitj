@@ -2,7 +2,6 @@ package org.bitj.wire;
 
 import org.bitj.BaseTest;
 import org.bitj.utils.Debug;
-import org.bitj.wire.BitcoinOutputStream;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;

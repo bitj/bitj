@@ -5,7 +5,6 @@ import org.bitj.BaseTest;
 import org.bitj.utils.Debug;
 import org.bitj.wire.PeerAddress;
 import org.bitj.wire.Wire;
-import org.bitj.wire.messages.AddrMessage;
 import org.testng.annotations.Test;
 
 import java.io.EOFException;

@@ -24,8 +24,8 @@ public class DebugTest extends BaseTest {
   @Test
   public void bytesToHex() throws Exception {
     assertEquals( Debug.bytesToHex(bytes(0)), "00" );
-    assertEquals( Debug.bytesToHex(bytes(128, 255)), "80 FF" );
-    assertEquals( Debug.bytesToHex(bytes(0, 249, 190, 180, 217, 0)), "00 F9 BE B4 D9 00" );
+    assertEquals( Debug.bytesToHex(bytes(128, 255)), "80 ff" );
+    assertEquals( Debug.bytesToHex(bytes(0, 249, 190, 180, 217, 0)), "00 f9 be b4 d9 00" );
   }
 
 }

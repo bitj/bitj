@@ -1,0 +1,9 @@
+
+* reject should be send if protocol too old or double version
+* as a server, when received a connection, don't send anything unless we hear their version
+* as a server, when received version, add that peer to the list of known/active peers/addresses
+* as a server, when received version, send version, verack
+* when received version, reject unless it's the first version by this peer
+* as a client, when received version, disconnect if connected to self (check nonce)
+* as a client, when received version, send verack, addr(own) what for??, getaddr
+* version message and ack is obligatory (expect handshake)

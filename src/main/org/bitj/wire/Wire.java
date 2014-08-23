@@ -119,4 +119,24 @@ public class Wire {
     return bytes;
   }
 
+  public static void reverseBytesInPlace(byte[] bytes) {
+    if (bytes.length % 2 != 0)
+      throw new IllegalArgumentException("The array length must be even, is " + bytes.length);
+    for (int i = 0; i < bytes.length / 2; i++) {
+      int j = bytes.length - i - 1;
+      byte tmp = bytes[i];
+      bytes[i] = bytes[j];
+      bytes[j] = tmp;
+    }
+  }
+
+  public static byte[] reverseBytes(byte[] bytes) {
+    if (bytes.length % 2 != 0)
+      throw new IllegalArgumentException("The array length must be even, is " + bytes.length);
+    byte[] reversed = new byte[bytes.length];
+    for (int i = 0; i < bytes.length; i++)
+      reversed[i] = bytes[bytes.length - i - 1];
+    return reversed;
+  }
+
 }

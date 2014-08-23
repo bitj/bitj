@@ -1,5 +1,7 @@
 package org.bitj.wire;
 
+import org.bitj.Sha256Hash;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -54,6 +56,10 @@ public class BitcoinOutputStream extends FilterOutputStream {
     if (ip instanceof Inet4Address)
       write(IP4_PREFIX_FOR_IP6_NOTATION);
     write(ip.getAddress());
+  }
+
+  public void writeSha256Hash(Sha256Hash hash) throws IOException {
+    write(Wire.reverseBytes(hash.getBytes()));
   }
 
   public byte[] toByteArray() {

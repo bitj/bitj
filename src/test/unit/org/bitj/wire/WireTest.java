@@ -1,7 +1,6 @@
 package org.bitj.wire;
 
 import org.bitj.BaseTest;
-import org.bitj.wire.Wire;
 import org.testng.annotations.Test;
 
 import java.math.BigInteger;
@@ -202,6 +201,18 @@ public class WireTest extends BaseTest {
   @Test(expectedExceptions = IllegalArgumentException.class)
   public void asciiStringToBytesPaddedWith0_WhenStringBytesLongerThanTargetLength() throws Exception {
     Wire.asciiStringToBytesPaddedWith0("abc", 2);
+  }
+
+  @Test
+  public void reverseBytesInPlace() {
+    byte[] bts = bytes(0, 255, 127, 128);
+    Wire.reverseBytesInPlace(bts);
+    assertEquals(bts, bytes(128, 127, 255, 0));
+  }
+
+  @Test(expectedExceptions = IllegalArgumentException.class)
+  public void reverseBytesInPlace_WhenGotEvenArray() {
+    Wire.reverseBytesInPlace(bytes(0, 255, 127, 128, 33));
   }
 
 }
