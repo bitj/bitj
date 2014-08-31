@@ -1,6 +1,7 @@
 package org.bitj.wire;
 
 import org.bitj.Sha256Hash;
+import org.bitj.utils.Debug;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FilterOutputStream;
@@ -20,12 +21,12 @@ public class BitcoinOutputStream extends FilterOutputStream {
     write(Wire.int32ToBytesLE(val));
   }
 
-  public void writeUnsignedInt16BE(int val) throws IOException {
-    write(Wire.unsignedInt16ToBytesBE(val));
+  public void writeInt64LE(long val) throws IOException {
+    write(Wire.int64ToBytesLE(val));
   }
 
-  public void writeUnsignedInt16LE(int val) throws IOException {
-    write(Wire.unsignedInt16ToBytesLE(val));
+  public void writeUnsignedInt16BE(int val) throws IOException {
+    write(Wire.unsignedInt16ToBytesBE(val));
   }
 
   public void writeUnsignedInt32LE(long val) throws IOException {
@@ -48,9 +49,7 @@ public class BitcoinOutputStream extends FilterOutputStream {
     write(Wire.unsignedIntToVarBytes(val));
   }
 
-  public void writeAsciiStringPaddedWith0(String s, int targetLength) throws IOException {
-    write(Wire.asciiStringToBytesPaddedWith0(s, targetLength));
-  }
+  public void writeAsciiStringPaddedWith0(String s, int targetLength) throws IOException { write(Wire.asciiStringToBytesPaddedWith0(s, targetLength)); }
 
   public void writeIP(InetAddress ip) throws IOException {
     if (ip instanceof Inet4Address)
@@ -58,7 +57,7 @@ public class BitcoinOutputStream extends FilterOutputStream {
     write(ip.getAddress());
   }
 
-  public void writeSha256Hash(Sha256Hash hash) throws IOException {
+  public void writeSha256HashLE(Sha256Hash hash) throws IOException {
     write(Wire.reverseBytes(hash.getBytes()));
   }
 
@@ -66,8 +65,6 @@ public class BitcoinOutputStream extends FilterOutputStream {
     return ((ByteArrayOutputStream) out).toByteArray();
   }
 
-  private static final byte[] IP4_PREFIX_FOR_IP6_NOTATION = new byte[] {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte)0xFF, (byte)0xFF
-  };
+  private static final byte[] IP4_PREFIX_FOR_IP6_NOTATION =  Debug.hexToBytes("00 00 00 00 00 00 00 00 00 00 FF FF");
 
 }

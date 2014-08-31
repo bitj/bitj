@@ -2,11 +2,15 @@ package org.bitj;
 
 import com.google.common.collect.ImmutableList;
 import org.bitj.persistance.Gateway;
+import org.bitj.wire.objects.Block;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * THIS IS MOSTLY THROW-AWAY CODE USED AS A STARTING POINT IN EXPERIMENTS AND TESTING
+ */
 public class Blockchain {
 
   private Gateway gateway;
@@ -32,6 +36,10 @@ public class Blockchain {
     return chain.size();
   }
 
+  public void append(Block block) {
+    chain.add(block);
+  }
+
   public ImmutableList<Sha256Hash> getDefaultBlockLocator() {
     return getBlockLocator(10);
   }
@@ -44,9 +52,9 @@ public class Blockchain {
     for (int blockIndex = getHeight()-1; blockIndex > 0; blockIndex -= step, ++loopPass) {
       if (loopPass >= numberOfLastConsecutive) step *= 2;
       Block block = chain.get(blockIndex);
-      builder.add(block.hash);
+      builder.add(block.getHash());
     }
-    builder.add(getGenesisBlock().hash);
+    builder.add(getGenesisBlock().getHash());
     return builder.build();
   }
 

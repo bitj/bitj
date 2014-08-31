@@ -5,7 +5,7 @@ import java.io.*;
 // TODO: add tests (this is imported from the other project where no tests were present)
 public class JarFileLoader {
 
-  public String readTextFileFromJar(String path) {
+  public static String readTextFileFromJar(String path) {
     StringBuilder content = new StringBuilder();
     try {
       return tryToReadTextFileFromJar(path, content);
@@ -14,8 +14,10 @@ public class JarFileLoader {
     }
   }
 
-  private String tryToReadTextFileFromJar(String path, StringBuilder content) throws IOException {
+  private static String tryToReadTextFileFromJar(String path, StringBuilder content) throws IOException {
     InputStream inputStream = JarFileLoader.class.getResourceAsStream(path);
+    if (inputStream == null)
+      throw new IOException("Invalid resource path " + path);
     InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
     BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
     String line;
@@ -24,7 +26,7 @@ public class JarFileLoader {
     return content.toString();
   }
 
-  public byte[] readBinaryFileFromJar(String path) {
+  public static byte[] readBinaryFileFromJar(String path) {
     try {
       return tryToReadBinaryFileFromJar(path);
     } catch (IOException e) {
@@ -32,8 +34,10 @@ public class JarFileLoader {
     }
   }
 
-  private byte[] tryToReadBinaryFileFromJar(String path) throws IOException {
+  private static byte[] tryToReadBinaryFileFromJar(String path) throws IOException {
     InputStream inputStream = JarFileLoader.class.getResourceAsStream(path);
+    if (inputStream == null)
+      throw new IOException("Invalid resource path " + path);
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     try {
       while (true) {

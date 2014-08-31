@@ -1,7 +1,8 @@
-package org.bitj.wire;
+package org.bitj.wire.objects;
 
 import org.bitj.BaseTest;
 import org.bitj.Sha256Hash;
+import org.bitj.wire.BitcoinInputStream;
 import org.testng.annotations.Test;
 
 import java.net.ProtocolException;
@@ -43,7 +44,7 @@ public class InvItemTest extends BaseTest {
   @Test(expectedExceptions = ProtocolException.class)
   public void deserialize_WhenInvItemTypeIsInvalid() throws Exception {
     BitcoinInputStream in = bitcoinStream(
-      3, 0, 0, 0,  // invalid type
+      3, 0, 0, 0,  // 3 - invalid type
       255, 254, 253, 252, 251, 250, 249, 248, 247, 246, 245, 244, 243, 242, 241, 240,
       15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
     );

@@ -1,9 +1,7 @@
 package org.bitj.wire.messages;
 
 import org.bitj.BaseTest;
-import org.bitj.utils.Debug;
 import org.bitj.wire.BitcoinInputStream;
-import org.bitj.wire.messages.VersionMessage;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
@@ -26,7 +24,7 @@ public class VersionMessageTest extends BaseTest {
     .startHeight(98645)
     .get();
 
-  public static byte[] PAYLOAD1_BYTES = Debug.hexToBytes(
+  public static byte[] PAYLOAD1_BYTES = bytes(
     "9C 7C 00 00" +
       "01 00 00 00 00 00 00 00" +
       "E6 15 10 4D 00 00 00 00" +
@@ -48,15 +46,15 @@ public class VersionMessageTest extends BaseTest {
     .startHeight(212672)
     .get();
 
-  static byte[] PAYLOAD2_BYTES = Debug.hexToBytes(
+  static byte[] PAYLOAD2_BYTES = bytes(
     "62 EA 00 00" +
-    "01 00 00 00 00 00 00 00" +
-    "11 B2 D0 50 00 00 00 00" +
-    "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF FF 7F 00 00 01 20 8D" +
-    "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF FF 7F 00 00 01 20 8D" +
-    "3B 2E B3 5D 8C E6 17 65" +
-    "0F 2F 53 61 74 6F 73 68 69 3A 30 2E 37 2E 32 2F" +
-    "C0 3E 03 00"
+      "01 00 00 00 00 00 00 00" +
+      "11 B2 D0 50 00 00 00 00" +
+      "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF FF 7F 00 00 01 20 8D" +
+      "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF FF 7F 00 00 01 20 8D" +
+      "3B 2E B3 5D 8C E6 17 65" +
+      "0F 2F 53 61 74 6F 73 68 69 3A 30 2E 37 2E 32 2F" +
+      "C0 3E 03 00"
   );
 
   @Test

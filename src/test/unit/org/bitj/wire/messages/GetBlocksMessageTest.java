@@ -1,16 +1,12 @@
 package org.bitj.wire.messages;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import org.bitj.BaseTest;
 import org.bitj.Sha256Hash;
-import org.bitj.utils.Debug;
 import org.bitj.wire.BitcoinInputStream;
-import org.bitj.wire.InvItem;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.net.ProtocolException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -30,7 +26,7 @@ public class GetBlocksMessageTest extends BaseTest {
     HASH_STOP
   );
 
-  public static byte[] PAYLOAD1_BYTES = Debug.hexToBytes(
+  public static byte[] PAYLOAD1_BYTES = bytes(
     "9C 7C 00 00" +   // version
       "03" +          // number of hashes in block locator
       // block locator

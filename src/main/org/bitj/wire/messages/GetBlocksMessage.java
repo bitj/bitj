@@ -9,8 +9,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.ProtocolException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -45,8 +43,8 @@ public class GetBlocksMessage extends Message {
     out.writeUnsignedInt32LE(version);
     out.writeUnsignedVarInt(blockLocator.size());
     for (Sha256Hash hash : blockLocator)
-      out.writeSha256Hash(hash);
-    out.writeSha256Hash(stopHash);
+      out.writeSha256HashLE(hash);
+    out.writeSha256HashLE(stopHash);
     return out.toByteArray();
   }
 

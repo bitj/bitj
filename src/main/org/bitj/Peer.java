@@ -1,6 +1,5 @@
 package org.bitj;
 
-import com.google.common.collect.ImmutableList;
 import org.bitj.wire.messages.*;
 
 import java.io.*;
@@ -9,6 +8,9 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 
+/**
+ * THIS IS MOSTLY THROW-AWAY CODE USED TO TEST AND TRY MESSAGE SERIALIZATION "IN PRACTICE" (ON A TRUE CONNECTION)
+ */
 public class Peer {
 
   static enum ClientState { NEUTRAL, AWAITING_VERSION, AWAITING_VERACK, AWAITING_INV }
@@ -24,7 +26,7 @@ public class Peer {
 
   private VersionMessage version;
 
-  private Queue jobs = new ConcurrentLinkedQueue<String>();
+  private Queue<String> jobs = new ConcurrentLinkedQueue<>();
 
   private ClientState state = ClientState.NEUTRAL;
 
@@ -61,7 +63,7 @@ public class Peer {
         handleMessage();
       if (state == ClientState.NEUTRAL && jobAvailable())
         handleJob();
-      Thread.sleep(SLEEP_TIME);
+      //Thread.sleep(SLEEP_TIME);
     }
   }
 
@@ -81,6 +83,8 @@ public class Peer {
         handle((InvMessage) msg);
       else
         ignore(msg);
+    if (msg instanceof BlockMessage)
+      handle((BlockMessage) msg);
   }
 
   private boolean jobAvailable() {
@@ -92,8 +96,9 @@ public class Peer {
   }
 
   private void handle(Object job) throws IOException {
-    if (job instanceof String && job.equals(DOWNLOAD_BLOCKCHAIN))
-      doDownloadBlockchain();
+    if (job instanceof String && job.equals(DOWNLOAD_BLOCKCHAIN)) {
+      new BlockchainDownloader(in, out).start();
+    }
   }
 
   private void ignore(Message msg) {
@@ -104,17 +109,14 @@ public class Peer {
     jobs.add(DOWNLOAD_BLOCKCHAIN);
   }
 
-  private void doDownloadBlockchain() throws IOException {
-    System.out.println("Downloading blockchain...");
-    ImmutableList<Sha256Hash> blockLocator = App.getInstance().getBlockchain().getDefaultBlockLocator();
-    GetBlocksMessage msg = new GetBlocksMessage(blockLocator);
-    System.out.println("Sending: " + msg);
-    msg.serialize(out);
-    state = ClientState.AWAITING_INV;
+  private void handle(InvMessage inv) throws IOException {
+    GetDataMessage getdata = new GetDataMessage(inv.getInvItems());
+    System.out.println("Sending: " + getdata);
+    getdata.serialize(out);
   }
 
-  private void handle(InvMessage msg) {
-    System.out.println("Handling " + msg);
+  private void handle(BlockMessage blockMsg) throws IOException {
+    System.out.println(blockMsg.getBlock().getNonce());
   }
 
   private void sendGetAddr() throws IOException {

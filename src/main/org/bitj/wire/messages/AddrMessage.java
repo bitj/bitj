@@ -3,7 +3,7 @@ package org.bitj.wire.messages;
 import com.google.common.collect.ImmutableSet;
 import org.bitj.wire.BitcoinInputStream;
 import org.bitj.wire.BitcoinOutputStream;
-import org.bitj.wire.PeerAddress;
+import org.bitj.wire.objects.PeerAddress;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

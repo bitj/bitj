@@ -2,16 +2,16 @@ package org.bitj.wire.messages;
 
 import com.google.common.collect.ImmutableSet;
 import org.bitj.BaseTest;
-import org.bitj.utils.Debug;
-import org.bitj.wire.PeerAddress;
 import org.bitj.wire.Wire;
+import org.bitj.wire.objects.PeerAddress;
 import org.testng.annotations.Test;
 
 import java.io.EOFException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class AddrMessageTest extends BaseTest {
 
@@ -26,7 +26,7 @@ public class AddrMessageTest extends BaseTest {
     )
   );
 
-  static byte[] MSG_BYTES = Debug.hexToBytes(
+  static byte[] MSG_BYTES = bytes(
     // count
     "02" +
       // net_addr 1

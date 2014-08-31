@@ -1,7 +1,6 @@
 package org.bitj.wire.messages;
 
 import org.bitj.BaseTest;
-import org.bitj.wire.messages.VerackMessage;
 import org.testng.annotations.Test;
 
 import java.io.IOException;

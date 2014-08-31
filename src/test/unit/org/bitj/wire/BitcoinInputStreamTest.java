@@ -1,6 +1,7 @@
 package org.bitj.wire;
 
 import org.bitj.BaseTest;
+import org.bitj.Sha256Hash;
 import org.bitj.wire.messages.Message;
 import org.testng.annotations.Test;
 
@@ -18,36 +19,41 @@ public class BitcoinInputStreamTest extends BaseTest {
   @Test(expectedExceptions = EOFException.class)
   public void readMagicMarkerNotPresentInTheStream() throws Exception {
     BitcoinInputStream in = bitcoinStream(0, 0, 66, 33, 22);
-    in.readMagic(bytes(99));
+    byte[] magicMarker = bytes(99);
+    in.readMagic(magicMarker);
   }
 
   @Test
   public void readMagic1ByteFoundAt0() throws Exception {
     BitcoinInputStream in = bitcoinStream(254, 1);
-    in.readMagic(bytes(254));
+    byte[] magicMarker = bytes(254);
+    in.readMagic(magicMarker);
     assertEquals(in.read(), 1);
   }
 
   @Test
   public void readMagic2BytesFoundAt0() throws Exception {
     BitcoinInputStream in = bitcoinStream(254, 127, 66);
-    in.readMagic(bytes(254, 127));
+    byte[] magicMarker = bytes(254, 127);
+    in.readMagic(magicMarker);
     assertEquals(in.read(), 66);
   }
 
   @Test
   public void readMagic2BytesFoundInTheMiddleOfStream() throws Exception {
     BitcoinInputStream in = bitcoinStream(0, 0, 11, 66, 33, 22);
-    in.readMagic(bytes(66, 33));
+    byte[] magicMarker = bytes(66, 33);
+    in.readMagic(magicMarker);
     assertEquals(in.read(), 22);
   }
 
   @Test
   public void readMagic4BytesFoundInTheMiddleOfStreamAfterPartialMarkers() throws Exception {
-    BitcoinInputStream in = bitcoinStream(0, 0xFF, 127, 0xF9, 0xBE, 0xB4, 10, 10, 0xF9, 0xBE, 0xB4, 0xD9, 255, 128, 22);
-    in.readMagic(bytes(0xF9, 0xBE, 0xB4, 0xD9));
-    assertEquals(in.read(), 255);
-    assertEquals(in.read(), 128);
+    BitcoinInputStream in = bitcoinStream("00 FF 7F F9 BE B4 0A 0A F9 BE B4 D9 FF 80 16");
+    byte[] magicMarker = bytes("F9 BE B4 D9");
+    in.readMagic(magicMarker);
+    assertEquals(in.read(), 0xFF);
+    assertEquals(in.read(), 0x80);
   }
 
   // readPaddedAsciiString
@@ -267,6 +273,15 @@ public class BitcoinInputStreamTest extends BaseTest {
   public void readIP_publicIP6() throws Exception {
     BitcoinInputStream in = bitcoinStream("0000 0db8 0000 0000 0000 ff00 0042 8329");
     assertEquals(in.readIP(), InetAddress.getByName("0000:0db8:0000::0000:ff00:0042:8329"));
+  }
+
+  // readSha256Hash
+
+  @Test
+  public void readSha256Hash() throws Exception {
+    BitcoinInputStream in = bitcoinStream("00000000000000001ad3eb4971697d07256b5c049bfcf80a1a2c6815bc9b3463FF");
+    assertEquals(in.readSha256Hash(), new Sha256Hash("63349bbc15682c1a0af8fc9b045c6b25077d697149ebd31a0000000000000000"));
+    assertEquals(in.read(), 255); // next byte after SHA is available
   }
 
   // readFully

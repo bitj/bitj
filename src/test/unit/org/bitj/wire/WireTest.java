@@ -1,6 +1,7 @@
 package org.bitj.wire;
 
 import org.bitj.BaseTest;
+import org.bitj.utils.Debug;
 import org.testng.annotations.Test;
 
 import java.math.BigInteger;
@@ -20,6 +21,24 @@ public class WireTest extends BaseTest {
     assertEquals( Wire.int32ToBytesLE(Integer.MAX_VALUE), bytes(255, 255, 255, 127) );
     assertEquals( Wire.int32ToBytesLE(Integer.MIN_VALUE), bytes(0, 0, 0, 128) );
     assertEquals( Wire.int32ToBytesLE(-1), bytes(255, 255, 255, 255) );
+  }
+
+  // int64ToBytesLE
+
+  @Test
+  public void int64ToBytesLE() throws Exception {
+    assertEquals( Wire.int64ToBytesLE(0),               bytes(0, 0, 0, 0, 0, 0, 0, 0) );
+    assertEquals( Wire.int64ToBytesLE(1),               bytes(1, 0, 0, 0, 0, 0, 0, 0) );
+    assertEquals( Wire.int64ToBytesLE(256),             bytes(0, 1, 0, 0, 0, 0, 0, 0) );
+    assertEquals( Wire.int64ToBytesLE(65536),           bytes(0, 0, 1, 0, 0, 0, 0, 0) );
+    assertEquals( Wire.int64ToBytesLE(16777216),        bytes(0, 0, 0, 1, 0, 0, 0, 0) );
+    assertEquals( Wire.int64ToBytesLE(4294967296L),     bytes(0, 0, 0, 0, 1, 0, 0, 0) );
+    assertEquals( Wire.int64ToBytesLE(1099511627776L),  bytes(0, 0, 0, 0, 0, 1, 0, 0) );
+    assertEquals( Wire.int64ToBytesLE(281474976710656L),bytes(0, 0, 0, 0, 0, 0, 1, 0) );
+    assertEquals( Wire.int64ToBytesLE(Long.MAX_VALUE),  bytes(255, 255, 255, 255, 255, 255, 255, 127) );
+    assertEquals( Wire.int64ToBytesLE(Long.MIN_VALUE),  bytes(0, 0, 0, 0, 0, 0, 0, 128) );
+    assertEquals( Wire.int64ToBytesLE(Long.MIN_VALUE + 1),  bytes(1, 0, 0, 0, 0, 0, 0, 128) );
+    assertEquals( Wire.int64ToBytesLE(-1),              bytes(255, 255, 255, 255, 255, 255, 255, 255) );
   }
 
   // unsignedInt16ToBytesBE
@@ -167,6 +186,24 @@ public class WireTest extends BaseTest {
     assertEquals( Wire.unsignedIntToVarBytes(9223372036854775807L), bytes(255, 255, 255, 255, 255, 255, 255, 255, 127) );
   }
 
+  @Test(expectedExceptions = IllegalArgumentException.class)
+  public void unsignedIntVarSizeInBytes_WhenArgumentIsNegative() throws Exception {
+    Wire.unsignedIntVarSizeInBytes(-1);
+  }
+
+  @Test
+  public void unsignedIntVarSizeInBytes() throws Exception {
+    System.out.println(Debug.bytesToHex(Wire.unsignedIntToVarBytes(556)));
+    assertEquals( Wire.unsignedIntVarSizeInBytes(0), 1 );
+    assertEquals( Wire.unsignedIntVarSizeInBytes(252), 1 );
+    assertEquals( Wire.unsignedIntVarSizeInBytes(253), 3 );
+    assertEquals( Wire.unsignedIntVarSizeInBytes(65535), 3 );
+    assertEquals( Wire.unsignedIntVarSizeInBytes(65536), 5 );
+    assertEquals( Wire.unsignedIntVarSizeInBytes(4294967295L), 5 );
+    assertEquals( Wire.unsignedIntVarSizeInBytes(4294967296L), 9 );
+    assertEquals( Wire.unsignedIntVarSizeInBytes(9223372036854775807L), 9 );
+  }
+
   // stringToVarBytes
 
   @Test
@@ -213,6 +250,17 @@ public class WireTest extends BaseTest {
   @Test(expectedExceptions = IllegalArgumentException.class)
   public void reverseBytesInPlace_WhenGotEvenArray() {
     Wire.reverseBytesInPlace(bytes(0, 255, 127, 128, 33));
+  }
+
+  @Test
+  public void reverseBytes() {
+    assertEquals(Wire.reverseBytes(bytes(0, 255, 127, 128)), bytes(128, 127, 255, 0));
+  }
+
+  @Test(expectedExceptions = IllegalArgumentException.class)
+  public void reverseBytes_WhenGotEvenArray() {
+    Wire.reverseBytes
+      (bytes(0, 255, 127, 128, 33));
   }
 
 }

@@ -1,4 +1,7 @@
-package org.bitj.wire;
+package org.bitj.wire.objects;
+
+import org.bitj.wire.BitcoinInputStream;
+import org.bitj.wire.BitcoinOutputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package org.bitj.persistance;
 
-import org.bitj.Block;
+import org.bitj.wire.objects.Block;
 
 import java.sql.SQLException;
 import java.util.List;

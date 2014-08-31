@@ -1,14 +1,12 @@
-package org.bitj.wire;
+package org.bitj.wire.objects;
 
 import org.bitj.BaseTest;
-import org.bitj.utils.Debug;
 import org.bitj.wire.BitcoinInputStream;
-import org.bitj.wire.PeerAddress;
 import org.testng.annotations.Test;
 
 import java.net.InetAddress;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 public class PeerAddressTest extends BaseTest {
 
@@ -22,7 +20,7 @@ public class PeerAddressTest extends BaseTest {
       .get();
     assertEquals(
       peerAddress.serialize(),
-      Debug.hexToBytes(
+      bytes(
         "E6 15 10 4D" +
           "01 00 00 00 00 00 00 00" +  // 1 (NODE_NETWORK: see services listed under version command)
           "00 00 00 00 00 00 00 00 00 00 FF FF 0A 00 00 01" +
@@ -41,7 +39,7 @@ public class PeerAddressTest extends BaseTest {
       .get();
     assertEquals(
       peerAddress.serialize(),
-      Debug.hexToBytes(
+      bytes(
         "00 00 00 00" +
           "00 00 00 00 00 00 00 00" +  // 1 (NODE_NETWORK: see services listed under version command)
           "00 00 0d b8 00 00 00 00 00 00 ff 00 00 42 83 29" +
@@ -66,7 +64,5 @@ public class PeerAddressTest extends BaseTest {
       .get();
     assertEquals(PeerAddress.deserialize(in), peerAddress);
   }
-
-  // TODO: self consistency test
 
 }

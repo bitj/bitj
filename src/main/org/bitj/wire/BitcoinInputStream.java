@@ -138,7 +138,7 @@ public class BitcoinInputStream extends FilterInputStream {
   }
 
   public void readFully(byte bytes[], int off, int len) throws IOException {
-    if (len < 0)
+    if (off < 0 || len < 0)
       throw new IndexOutOfBoundsException();
     int n = 0;
     while (n < len) {

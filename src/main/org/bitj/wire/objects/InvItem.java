@@ -1,6 +1,8 @@
-package org.bitj.wire;
+package org.bitj.wire.objects;
 
 import org.bitj.Sha256Hash;
+import org.bitj.wire.BitcoinInputStream;
+import org.bitj.wire.BitcoinOutputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,7 +23,7 @@ public class InvItem {
   public byte[] serialize() throws IOException {
     BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(30));
     out.writeUnsignedInt32LE(type.value());
-    out.writeSha256Hash(hash);
+    out.writeSha256HashLE(hash);
     return out.toByteArray();
   }
 

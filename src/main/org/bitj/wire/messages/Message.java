@@ -70,6 +70,14 @@ public abstract class Message {
       return GetAddrMessage.deserializePayload(in);
     if (messageName.equals("addr"))
       return AddrMessage.deserializePayload(in);
+    if (messageName.equals("getblocks"))
+      return GetBlocksMessage.deserializePayload(in);
+    if (messageName.equals("getdata"))
+      return GetDataMessage.deserializePayload(in);
+    if (messageName.equals("tx"))
+      return TxMessage.deserializePayload(in);
+    if (messageName.equals("block"))
+      return BlockMessage.deserializePayload(in);
     throw new Unrecognized("Unknown message name " + messageName);  // TODO: introduce ProtocolException
   }
 

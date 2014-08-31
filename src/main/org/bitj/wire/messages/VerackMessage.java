@@ -29,18 +29,6 @@ public class VerackMessage extends Message {
     return toStringHelper(this.getClass()).toString();
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return 31;
-  }
-
   private VerackMessage() {}
 
   public static synchronized VerackMessage getInstance() {

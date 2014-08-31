@@ -13,6 +13,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class Sha256Hash implements Comparable<Sha256Hash> {
 
   public static final Sha256Hash ZERO = new Sha256Hash(new byte[32]);
+  public static final Sha256Hash ONE = new Sha256Hash(Debug.hexToBytes("FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF"));
 
   private byte[] bytes;
 
@@ -22,7 +23,7 @@ public class Sha256Hash implements Comparable<Sha256Hash> {
   }
 
   public Sha256Hash(String hex) {
-    checkArgument(hex.length() == 64);
+    checkArgument(hex.replaceAll("\\s", "").length() == 64);
     this.bytes = Debug.hexToBytes(hex);
   }
 

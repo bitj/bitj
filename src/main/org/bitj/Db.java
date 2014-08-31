@@ -28,7 +28,7 @@ public class Db {
   }
 
   private void migrate() throws SQLException {
-    String migrateSql = new JarFileLoader().readTextFileFromJar("/migrate.sql");
+    String migrateSql = JarFileLoader.readTextFileFromJar("/migrate.sql");
     exec(migrateSql);
   }
 
@@ -40,7 +40,7 @@ public class Db {
   }
 
   private void populate() throws SQLException {
-    String populateSql = new JarFileLoader().readTextFileFromJar("/populate.sql");
+    String populateSql = JarFileLoader.readTextFileFromJar("/populate.sql");
     exec(populateSql);
   }
 
@@ -55,4 +55,5 @@ public class Db {
   public Connection getConnection() {
     return conn;
   }
+
 }

@@ -2,7 +2,6 @@ package org.bitj.wire.messages;
 
 import com.google.common.primitives.Bytes;
 import org.bitj.BaseTest;
-import org.bitj.utils.Debug;
 import org.bitj.wire.BitcoinInputStream;
 import org.testng.annotations.Test;
 
@@ -22,10 +21,10 @@ public class MessageTest extends BaseTest {
   }
 
   static byte[] EMPTY_MESSAGE_BYTES = bytes(
-    0xF9, 0xBE, 0xB4, 0xD9,                                                      // magic
-    0x76, 0x65, 0x72, 0x61, 0x63, 0x6B, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,      // "verack"
-    0x00, 0x00, 0x00, 0x00,                                                      // 0 (length of payload)
-    0x5D, 0xF6, 0xE0, 0xE2                                                       // checksum of the empty payload
+    "F9 BE B4 D9" +                             // magic
+    "76 65 72 61 63 6B 00 00 00 00 00 00" +     // "verack"
+    "00 00 00 00" +                             // 0 (length of payload)
+    "5D F6 E0 E2"                               // checksum of the empty payload
   );
 
   @Test
@@ -38,7 +37,7 @@ public class MessageTest extends BaseTest {
     public String name() { return "nonempty"; }
 
     @Override
-    public byte[] serializePayload() throws IOException { return bytes(0xFF, 0x00, 0x80, 0x00, 0x7F, 0x00, 0x81); }
+    public byte[] serializePayload() throws IOException { return bytes("FF 00 80 00 7F 00 81"); }
   }
 
   @Test
@@ -46,11 +45,11 @@ public class MessageTest extends BaseTest {
     assertEquals(
       serializeToBytes(new NonEmptyMessage()),
       bytes(
-        0xF9, 0xBE, 0xB4, 0xD9,                              // magic
-        110, 111, 110, 101, 109, 112, 116, 121, 0, 0, 0, 0,  // "nonempty"
-        7, 0, 0, 0,                                          // length
-        0x87, 0xA0, 0x91, 0xCB,                              // checksum of the payload
-        0xFF, 0x00, 0x80, 0x00, 0x7F, 0x00, 0x81             // payload
+        "F9 BE B4 D9" +                              // magic
+        "6E 6F 6E 65 6D 70 74 79 00 00 00 00" +      // "nonempty"
+        "07 00 00 00" +                              // length
+        "87 A0 91 CB" +                              // checksum of the payload
+        "FF 00 80 00 7F 00 81"                       // payload
       )
     );
   }
@@ -63,7 +62,7 @@ public class MessageTest extends BaseTest {
 
   @Test
   public void deserializes_WhenGarbageBytesPreceedTheMessage() throws Exception {
-    byte[] headerBytes = Debug.hexToBytes(
+    byte[] headerBytes = bytes(
       "00 00 00 00" +  // garbage
         "F9 00 00 00" +  // garbage
         "F9 BE 00 00" +  // garbage
@@ -79,7 +78,7 @@ public class MessageTest extends BaseTest {
 
   @Test(expectedExceptions = Message.InvalidChecksum.class)
   public void deserialize_WhenChecksumIsInvalid() throws Exception {
-    byte[] headerBytes = Debug.hexToBytes(
+    byte[] headerBytes = bytes(
       "F9 BE B4 D9" +
         "76 65 72 73 69 6F 6E 00 00 00 00 00" +
         "64 00 00 00" +
@@ -93,7 +92,7 @@ public class MessageTest extends BaseTest {
 
   @Test(expectedExceptions = Message.TooLarge.class)
   public void deserialize_WhenMessageIsTooLarge() throws Exception {
-    byte[] headerBytes = Debug.hexToBytes(
+    byte[] headerBytes = bytes(
       "F9 BE B4 D9" +
         "76 65 72 61 63 6B 00 00 00 00 00 00" +
         "01 00 00 02" +       // 32MB + 1
@@ -105,7 +104,7 @@ public class MessageTest extends BaseTest {
 
   @Test(expectedExceptions = Message.Unrecognized.class)
   public void deserialize_WhenMessageNameIsNotRecognized() throws Exception {
-    byte[] headerBytes = Debug.hexToBytes(
+    byte[] headerBytes = bytes(
       "F9 BE B4 D9" +
       "00 00 00 00 00 00 00 00 00 00 00 00" +   // empty name
       "00 00 00 00" +
@@ -117,7 +116,7 @@ public class MessageTest extends BaseTest {
 
   @Test
   public void deserializesNonEmptyMessage() throws Exception {
-    byte[] headerBytes = Debug.hexToBytes(
+    byte[] headerBytes = bytes(
       "F9 BE B4 D9" +
         "76 65 72 73 69 6F 6E 00 00 00 00 00" +
         "64 00 00 00" +

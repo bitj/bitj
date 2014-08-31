@@ -2,12 +2,13 @@ package org.bitj;
 
 import org.bitj.utils.Debug;
 import org.bitj.wire.BitcoinInputStream;
+import org.bitj.wire.Wire;
 import org.bitj.wire.messages.Message;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class BaseTest {
 
@@ -22,9 +23,17 @@ public class BaseTest {
     return bBytes;
   }
 
+  public static byte[] bytes(String hex) {
+    return Debug.hexToBytes(hex);
+  }
+
+  public static byte[] reversedBytes(String hex) {
+    return Wire.reverseBytes(Debug.hexToBytes(hex));
+  }
+
   public static byte[] randomBytes(int n) {
     byte[] b = new byte[n];
-    new Random().nextBytes(b);
+    rng().nextBytes(b);
     return b;
   }
 
@@ -48,6 +57,10 @@ public class BaseTest {
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     message.serialize(os);
     return os.toByteArray();
+  }
+
+  public static ThreadLocalRandom rng() {
+    return ThreadLocalRandom.current();
   }
 
 }

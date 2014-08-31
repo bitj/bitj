@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import org.bitj.BaseTest;
 import org.bitj.Sha256Hash;
 import org.bitj.wire.BitcoinInputStream;
-import org.bitj.wire.InvItem;
+import org.bitj.wire.objects.InvItem;
 import org.testng.annotations.Test;
 
 import java.io.IOException;

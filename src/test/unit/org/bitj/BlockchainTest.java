@@ -3,12 +3,13 @@ package org.bitj;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.bitj.persistance.Gateway;
+import org.bitj.wire.objects.Block;
 import org.testng.annotations.Test;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 public class BlockchainTest extends BaseTest {
 
@@ -23,7 +24,7 @@ public class BlockchainTest extends BaseTest {
     Gateway gatewayStub = new Gateway() {
       @Override
       public List<Block> getBlocks() throws SQLException {
-        return Lists.newArrayList(new Block(HASH0), new Block(HASH1), new Block(HASH2), new Block(HASH3), new Block(HASH4));
+        return Lists.newArrayList(blockWith(HASH0), blockWith(HASH1), blockWith(HASH2), blockWith(HASH3), blockWith(HASH4));
       }
     };
     Blockchain blockchain = new Blockchain(gatewayStub);
@@ -34,6 +35,10 @@ public class BlockchainTest extends BaseTest {
     assertEquals(blockLocator.get(1), HASH3);
     assertEquals(blockLocator.get(2), HASH1);
     assertEquals(blockLocator.get(3), HASH0);
+  }
+
+  private Block blockWith(Sha256Hash hash) {
+    return new Block.Builder().hash(hash).prevHash(Sha256Hash.ZERO).mrklRoot(Sha256Hash.ZERO).bits(0).nonce(0).get();
   }
 
 }
