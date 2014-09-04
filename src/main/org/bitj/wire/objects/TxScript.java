@@ -18,7 +18,7 @@ public class TxScript {
    * https://github.com/bitcoin/bitcoin/blob/master/src/script.cpp#L312  # line "if (script.size() > 10000)"
    * https://bitcointalk.org/index.php?topic=263750.0
    */
-  public static long MAX_SIZE = 10000;
+  public static final long MAX_SIZE = 10000;
 
   /**
    * Based on:
@@ -26,7 +26,7 @@ public class TxScript {
    * https://github.com/bitcoin/bitcoin/blob/master/src/main.cpp#L572 # line "remember the 520 byte limit on redeemScript size"
    * https://bitcointalk.org/index.php?topic=615250.0
    */
-  public static long MAX_SIZE_IN_INPUT = 520;
+  public static final long MAX_SIZE_IN_INPUT = 520;
 
   private byte[] bytes;
 

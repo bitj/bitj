@@ -1,6 +1,7 @@
 package org.bitj.utils;
 
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Utils {
 
@@ -22,6 +23,10 @@ public class Utils {
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e); // cannot happen
     }
+  }
+
+  public static ThreadLocalRandom weakRNG() {
+    return ThreadLocalRandom.current();
   }
 
 }

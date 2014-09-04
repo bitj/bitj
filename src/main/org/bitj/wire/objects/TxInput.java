@@ -17,7 +17,7 @@ public class TxInput {
   private TxScript script;
   private long sequence = Wire.MAX_UINT_32; // http://bitcoin.stackexchange.com/questions/2025/what-is-txins-sequence
 
-  public static long MIN_SIZE = 42; // assuming script length of 1 byte
+  public static final long MIN_SIZE = 42; // assuming script length of 1 byte
 
   public TxInput(TxOutputPointer prevOutput, TxScript script) {
     this.prevOutput = prevOutput;

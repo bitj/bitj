@@ -25,7 +25,7 @@ public class Tx {
    * Based on:
    * https://github.com/bitcoin/bitcoin/blob/master/src/core.h#L217   # line "static const int CURRENT_VERSION=1;"
    */
-  public static long VERSION = 1;
+  public static final long VERSION = 1;
 
   /**
    * Below this value unlockAfter is interpreted as a block number, otherwise as a timestamp. Based on:
@@ -42,9 +42,9 @@ public class Tx {
    * Based on:
    * https://github.com/bitcoin/bitcoin/blob/master/src/main.h#L43  # line "static const unsigned int MAX_STANDARD_TX_SIZE = 100000;"
    */
-  public static long MAX_SIZE = 100_000;
-  public static long MAX_NUMBER_OF_INPUTS = MAX_SIZE / TxInput.MIN_SIZE;
-  public static long MAX_NUMBER_OF_OUTPUTS = MAX_SIZE / TxOutput.MIN_SIZE;
+  public static final long MAX_SIZE = 100_000;
+  public static final long MAX_NUMBER_OF_INPUTS = MAX_SIZE / TxInput.MIN_SIZE;
+  public static final long MAX_NUMBER_OF_OUTPUTS = MAX_SIZE / TxOutput.MIN_SIZE;
 
   public Tx(ImmutableList<TxInput> inputs, ImmutableList<TxOutput> outputs) {
     this.inputs = inputs;

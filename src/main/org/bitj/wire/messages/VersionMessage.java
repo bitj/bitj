@@ -29,7 +29,7 @@ public class VersionMessage extends Message {
   private long timestamp = Utils.currentUnixTimestamp();
 
   // Node random nonce, randomly generated every time a version packet is sent. This nonce is used to detect connections to self
-  private long nonce = Math.abs(new Random().nextLong());
+  private long nonce = Utils.weakRNG().nextLong(Long.MAX_VALUE);
 
   public static final String USER_AGENT_NAME = "bitj";
   public static final String USER_AGENT_VERSION = "0.1-SNAPSHOT";
