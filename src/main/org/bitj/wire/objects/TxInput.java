@@ -1,6 +1,5 @@
 package org.bitj.wire.objects;
 
-import org.bitj.utils.Utils;
 import org.bitj.wire.BitcoinInputStream;
 import org.bitj.wire.BitcoinOutputStream;
 import org.bitj.wire.Wire;
@@ -34,14 +33,14 @@ public class TxInput {
     BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(1024)); // most are ~512 bytes
     out.write(prevOutput.serialize());
     out.write(script.serialize());
-    out.writeUnsignedInt32LE(sequence);
+    out.writeUnsInt32LE(sequence);
     return out.toByteArray();
   }
 
   public static TxInput deserialize(BitcoinInputStream in) throws IOException {
     TxOutputPointer prevOutput = TxOutputPointer.deserialize(in);
     TxScript script = TxScript.deserialize(in, TxScript.Type.INPUT);
-    long sequence = in.readUnsignedInt32LE();
+    long sequence = in.readUnsInt32LE();
     return new TxInput(prevOutput, script, sequence);
   }
 

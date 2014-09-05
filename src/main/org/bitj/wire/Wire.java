@@ -36,7 +36,7 @@ public class Wire {
     };
   }
 
-  public static byte[] unsignedInt16ToBytesBE(int val) {
+  public static byte[] unsInt16ToBytesBE(int val) {
     if (val < 0 || val > MAX_UINT_16)
       throw new IllegalArgumentException("" + val + " must be in range [0," + MAX_UINT_16 + "]");
     return new byte[] {
@@ -45,7 +45,7 @@ public class Wire {
     };
   }
 
-  public static byte[] unsignedInt16ToBytesLE(int val) {
+  public static byte[] unsInt16ToBytesLE(int val) {
     if (val < 0 || val > MAX_UINT_16)
       throw new IllegalArgumentException("" + val + " must be in range [0," + MAX_UINT_16 + "]");
     return new byte[] {
@@ -54,7 +54,7 @@ public class Wire {
     };
   }
 
-  public static byte[] unsignedInt32ToBytesLE(long val) {
+  public static byte[] unsInt32ToBytesLE(long val) {
     if (val < 0 || val > MAX_UINT_32)
       throw new IllegalArgumentException("" + val + " must be in range [0," + MAX_UINT_32 + "]");
     return new byte[] {
@@ -65,13 +65,13 @@ public class Wire {
     };
   }
 
-  public static byte[] unsignedInt64ToBytesLE(BigInteger val) {
+  public static byte[] unsInt64ToBytesLE(BigInteger val) {
     if (val.signum() == -1  ||  val.compareTo(MAX_UINT_64) > 0)
       throw new IllegalArgumentException("" + val + " must be in range [0," + MAX_UINT_64 + "]");
     return reverseWithRightPadding(val.toByteArray(), 8);
   }
 
-  public static byte[] unsignedInt64ToBytesLE(long val) {
+  public static byte[] unsInt64ToBytesLE(long val) {
     if (val < 0)
       throw new IllegalArgumentException("" + val + " must be in range [0," + MAX_UINT_64 + "]");
     return new byte[] {
@@ -95,11 +95,11 @@ public class Wire {
 
   public static byte[] stringToVarBytes(String s) {
     byte[] sBytes = getBytesUTF8(s);
-    byte[] sLen = unsignedIntToVarBytes(sBytes.length);
+    byte[] sLen = unsIntToVarBytes(sBytes.length);
     return Bytes.concat(sLen, sBytes);
   }
 
-  public static byte[] unsignedIntToVarBytes(long val) {
+  public static byte[] unsIntToVarBytes(long val) {
     if (val < 0)
       throw new IllegalArgumentException("" + val + " must be in range [0," + MAX_UINT_64 + "]");
 
@@ -107,15 +107,15 @@ public class Wire {
       return new byte[] { (byte) val };
 
     if (isLessThanOrEqualToUnsigned(val, 0xFFFFL))
-      return Bytes.concat(new byte[] { (byte) 253 }, unsignedInt16ToBytesLE((int)val));
+      return Bytes.concat(new byte[] { (byte) 253 }, unsInt16ToBytesLE((int) val));
 
     if (isLessThanOrEqualToUnsigned(val, 0xFFFFFFFFL))
-      return Bytes.concat(new byte[] { (byte) 254 }, unsignedInt32ToBytesLE(val));
+      return Bytes.concat(new byte[] { (byte) 254 }, unsInt32ToBytesLE(val));
 
-    return Bytes.concat(new byte[] { (byte) 255 }, unsignedInt64ToBytesLE(val));
+    return Bytes.concat(new byte[] { (byte) 255 }, unsInt64ToBytesLE(val));
   }
 
-  public static int unsignedIntVarSizeInBytes(long val) {
+  public static int unsIntVarSizeInBytes(long val) {
     if (val < 0)
       throw new IllegalArgumentException("" + val + " must be in range [0," + MAX_UINT_64 + "]");
     if (isLessThanUnsigned(val, 0xFD))

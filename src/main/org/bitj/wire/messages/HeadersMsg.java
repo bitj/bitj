@@ -33,16 +33,16 @@ public class HeadersMsg extends Msg {
   public byte[] serializePayload() throws IOException {
     int sizeInBytes = (int) getSizeInBytes();
     BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(sizeInBytes));
-    out.writeUnsignedVarInt(blocks.size());
+    out.writeUnsVarInt(blocks.size());
     for (Block block : blocks) {
       block.serializeHeader(out);
-      out.writeUnsignedVarInt(0); // always 0 transactions in header
+      out.writeUnsVarInt(0); // always 0 transactions in header
     }
     return out.toByteArray();
   }
 
   public static HeadersMsg deserializePayload(BitcoinInputStream in) throws IOException {
-    BigInteger count = in.readUnsignedVarInt();
+    BigInteger count = in.readUnsVarInt();
     throwIfToMany(count);
     ImmutableList.Builder<Block> blocks = new ImmutableList.Builder<>();
     for (long i = 0; i < count.longValue(); i++) {
@@ -60,7 +60,7 @@ public class HeadersMsg extends Msg {
   public List<Block> getBlocks() { return blocks; }
 
   public long getSizeInBytes() {
-    return Wire.unsignedIntVarSizeInBytes(blocks.size()) /*count*/ + blocks.size() * HEADER_SIZE /*headers*/;
+    return Wire.unsIntVarSizeInBytes(blocks.size()) /*count*/ + blocks.size() * HEADER_SIZE /*headers*/;
   }
 
   @Override

@@ -55,13 +55,13 @@ public class AddrMsgTest extends BaseTest {
 
   @Test(expectedExceptions = AddrMsg.TooMany.class)
   public void deserializePayload_WhenToManyAddresses() throws Exception {
-    byte[] maliciousBytes = Wire.unsignedIntToVarBytes(1001);
+    byte[] maliciousBytes = Wire.unsIntToVarBytes(1001);
     AddrMsg.deserializePayload(bitcoinStream(maliciousBytes));
   }
 
   @Test(expectedExceptions = EOFException.class)
   public void deserializePayload_WhenToLittleAddresses() throws Exception {
-    byte[] maliciousBytes = Wire.unsignedIntToVarBytes(1); // claimd 1 address but got none in the stream
+    byte[] maliciousBytes = Wire.unsIntToVarBytes(1); // claimd 1 address but got none in the stream
     AddrMsg.deserializePayload(bitcoinStream(maliciousBytes));
   }
 

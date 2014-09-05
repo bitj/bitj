@@ -69,27 +69,27 @@ public class Tx {
 
   public byte[] serialize() throws IOException {
     BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(512)); // most tx have less then 512 bytes https://en.bitcoin.it/wiki/Maximum_transaction_rate
-    out.writeUnsignedInt32LE(version);
-    out.writeUnsignedVarInt(inputs.size());
+    out.writeUnsInt32LE(version);
+    out.writeUnsVarInt(inputs.size());
     for (TxInput input : inputs)
       out.write(input.serialize());
-    out.writeUnsignedVarInt(outputs.size());
+    out.writeUnsVarInt(outputs.size());
     for (TxOutput output : outputs)
       out.write(output.serialize());
-    out.writeUnsignedInt32LE(unlockAfter);
+    out.writeUnsInt32LE(unlockAfter);
     return out.toByteArray();
   }
 
   public static Tx deserialize(BitcoinInputStream in) throws IOException {
     // version
-    long version = in.readUnsignedInt32LE();
+    long version = in.readUnsInt32LE();
     throwIfUnexpectedVersion(version);
     int sizeInBytes = 4;
 
     // inputs
-    BigInteger nOfInputs = in.readUnsignedVarInt();
+    BigInteger nOfInputs = in.readUnsVarInt();
     throwIfNumberOfInputsIsInvalid(nOfInputs);
-    sizeInBytes += Wire.unsignedIntVarSizeInBytes(nOfInputs.longValue());
+    sizeInBytes += Wire.unsIntVarSizeInBytes(nOfInputs.longValue());
     ImmutableList.Builder<TxInput> inputs = new ImmutableList.Builder<>();
     for (long i = 0; i < nOfInputs.longValue(); i++) {
       TxInput txInput = TxInput.deserialize(in);
@@ -99,9 +99,9 @@ public class Tx {
     }
 
     // outputs
-    BigInteger nOfOutputs = in.readUnsignedVarInt();
+    BigInteger nOfOutputs = in.readUnsVarInt();
     throwIfNumberOfOutputsIsInvalid(nOfOutputs);
-    sizeInBytes += Wire.unsignedIntVarSizeInBytes(nOfInputs.longValue());
+    sizeInBytes += Wire.unsIntVarSizeInBytes(nOfInputs.longValue());
     throwIfTooLarge(sizeInBytes);
     ImmutableList.Builder<TxOutput> outputs = new ImmutableList.Builder<>();
     for (long i = 0; i < nOfOutputs.longValue(); i++) {
@@ -112,7 +112,7 @@ public class Tx {
     }
 
     // lock_time
-    long unlockAfter = in.readUnsignedInt32LE();
+    long unlockAfter = in.readUnsInt32LE();
     sizeInBytes += 4;
     throwIfTooLarge(sizeInBytes);
 
@@ -162,9 +162,9 @@ public class Tx {
 
   public long getSizeInBytes() {
     return 4L +
-      Wire.unsignedIntVarSizeInBytes(inputs.size()) +
+      Wire.unsIntVarSizeInBytes(inputs.size()) +
       inputs.stream().mapToLong(TxInput::getSizeInBytes).sum() +
-      Wire.unsignedIntVarSizeInBytes(outputs.size()) +
+      Wire.unsIntVarSizeInBytes(outputs.size()) +
       outputs.stream().mapToLong(TxOutput::getSizeInBytes).sum() +
       4;
   }

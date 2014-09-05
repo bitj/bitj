@@ -22,13 +22,13 @@ public class InvItem {
 
   public byte[] serialize() throws IOException {
     BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(30));
-    out.writeUnsignedInt32LE(type.value());
+    out.writeUnsInt32LE(type.value());
     out.writeSha256HashLE(hash);
     return out.toByteArray();
   }
 
   public static InvItem deserialize(BitcoinInputStream in) throws IOException {
-    Type type = Type.valueOf(in.readUnsignedInt32LE());
+    Type type = Type.valueOf(in.readUnsInt32LE());
     Sha256Hash hash = in.readSha256Hash();
     return new InvItem(type, hash);
   }

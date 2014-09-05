@@ -25,28 +25,28 @@ public class BitcoinOutputStream extends FilterOutputStream {
     write(Wire.int64ToBytesLE(val));
   }
 
-  public void writeUnsignedInt16BE(int val) throws IOException {
-    write(Wire.unsignedInt16ToBytesBE(val));
+  public void writeUnsInt16BE(int val) throws IOException {
+    write(Wire.unsInt16ToBytesBE(val));
   }
 
-  public void writeUnsignedInt32LE(long val) throws IOException {
-    write(Wire.unsignedInt32ToBytesLE(val));
+  public void writeUnsInt32LE(long val) throws IOException {
+    write(Wire.unsInt32ToBytesLE(val));
   }
 
-  public void writeUnsignedInt64LE(BigInteger val) throws IOException {
-    write(Wire.unsignedInt64ToBytesLE(val));
+  public void writeUnsInt64LE(BigInteger val) throws IOException {
+    write(Wire.unsInt64ToBytesLE(val));
   }
 
-  public void writeUnsignedInt64LE(long val) throws IOException {
-    write(Wire.unsignedInt64ToBytesLE(val));
+  public void writeUnsInt64LE(long val) throws IOException {
+    write(Wire.unsInt64ToBytesLE(val));
   }
 
   public void writeVarString(String s) throws IOException {
     write(Wire.stringToVarBytes(s));
   }
 
-  public void writeUnsignedVarInt(long val) throws IOException {
-    write(Wire.unsignedIntToVarBytes(val));
+  public void writeUnsVarInt(long val) throws IOException {
+    write(Wire.unsIntToVarBytes(val));
   }
 
   public void writeAsciiStringPaddedWith0(String s, int targetLength) throws IOException { write(Wire.asciiStringToBytesPaddedWith0(s, targetLength)); }

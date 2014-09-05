@@ -17,19 +17,19 @@ public class BitcoinInputStream extends FilterInputStream {
     super(is);
   }
 
-  public int readUnsignedInt16BE() throws IOException {
+  public int readUnsInt16BE() throws IOException {
     byte[] bytes = new byte[2];
     readFully(bytes);
     return ((0xFF & bytes[0]) << 8) + (0xFF & bytes[1]);
   }
 
-  public int readUnsignedInt16LE() throws IOException {
+  public int readUnsInt16LE() throws IOException {
     byte[] bytes = new byte[2];
     readFully(bytes);
     return ((0xFF & bytes[0])) + ((0xFF & bytes[1]) << 8);
   }
 
-  public long readUnsignedInt32LE() throws IOException {
+  public long readUnsInt32LE() throws IOException {
     byte[] bytes = new byte[4];
     readFully(bytes);
     return ((0xFFL & bytes[0])) +
@@ -38,7 +38,7 @@ public class BitcoinInputStream extends FilterInputStream {
       ((0xFFL & bytes[3]) << 24);
   }
 
-  public BigInteger readUnsignedInt64LE() throws IOException {
+  public BigInteger readUnsInt64LE() throws IOException {
     byte[] bytesLE = new byte[8];
     readFully(bytesLE);
     byte[] bytesBE = Wire.reverseWithRightPadding(bytesLE, 8);
@@ -67,23 +67,23 @@ public class BitcoinInputStream extends FilterInputStream {
       ((0xFFL & bytes[7]) << 56);
   }
 
-  public BigInteger readUnsignedVarInt() throws IOException {
+  public BigInteger readUnsVarInt() throws IOException {
     int b = read();
     if (b == -1)
       throw new EOFException();
     if (b < 0xFD)
       return BigInteger.valueOf(b);
     if (b == 0xFD)
-      return BigInteger.valueOf(readUnsignedInt16LE());
+      return BigInteger.valueOf(readUnsInt16LE());
     if (b == 0xFE)
-      return BigInteger.valueOf(readUnsignedInt32LE());
+      return BigInteger.valueOf(readUnsInt32LE());
     if (b == 0xFF)
-      return readUnsignedInt64LE();
+      return readUnsInt64LE();
     throw new RuntimeException("Unexpected byte value " + b);  // cannot happen
   }
 
   public String readVarString(long max) throws IOException {
-    BigInteger length = readUnsignedVarInt();
+    BigInteger length = readUnsVarInt();
     if (length.compareTo(BigInteger.valueOf(max)) > 0  ||  length.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0)
       throw new ProtocolException("VarString too large " + length + " > " + max + " bytes");
     byte[] bytes = new byte[length.intValue()];

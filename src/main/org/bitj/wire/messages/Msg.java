@@ -23,7 +23,7 @@ public abstract class Msg {
     byte[] payload = serializePayload();
     out.write(MAGIC_BYTES);
     out.writeAsciiStringPaddedWith0(name(), 12);
-    out.writeUnsignedInt32LE(payload.length);
+    out.writeUnsInt32LE(payload.length);
     out.write(Crypto.bitcoinChecksum(payload));
     out.write(payload);
     out.flush();
@@ -36,7 +36,7 @@ public abstract class Msg {
 
     String messageName = in.readPaddedAsciiString(12);
 
-    long length = in.readUnsignedInt32LE();
+    long length = in.readUnsInt32LE();
     throwIfTooLarge(length);
 
     byte[] expectedChecksum = in.readBytes(4);

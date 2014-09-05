@@ -30,14 +30,14 @@ public class AddrMsg extends Msg {
   @Override
   public byte[] serializePayload() throws IOException {
     BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(9 + peers.size() * 30));
-    out.writeUnsignedVarInt(peers.size());
+    out.writeUnsVarInt(peers.size());
     for (PeerAddress peerAddress : peers)
       out.write(peerAddress.serialize());
     return out.toByteArray();
   }
 
   public static AddrMsg deserializePayload(BitcoinInputStream in) throws IOException {
-    BigInteger count = in.readUnsignedVarInt();
+    BigInteger count = in.readUnsVarInt();
     if (count.compareTo(MAX_ADDRESSES) > 0)
       throw new TooMany("Peer sent " + count + " > " + MAX_ADDRESSES + " addresses");
     ImmutableSet.Builder<PeerAddress> builder = new ImmutableSet.Builder<PeerAddress>();

@@ -27,13 +27,13 @@ public class TxOutputPointer {
   public byte[] serialize() throws IOException {
     BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(36));
     out.writeSha256HashLE(txHash);
-    out.writeUnsignedInt32LE(outputIndex);
+    out.writeUnsInt32LE(outputIndex);
     return out.toByteArray();
   }
 
   public static TxOutputPointer deserialize(BitcoinInputStream in) throws IOException {
     Sha256Hash txHash = in.readSha256Hash();
-    long outputIndex = in.readUnsignedInt32LE();
+    long outputIndex = in.readUnsInt32LE();
     return new TxOutputPointer(txHash, outputIndex);
   }
 

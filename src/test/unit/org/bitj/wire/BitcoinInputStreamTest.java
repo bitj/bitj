@@ -89,73 +89,73 @@ public class BitcoinInputStreamTest extends BaseTest {
     assertEquals(in.read(), 127);
   }
 
-  // readUnsignedInt16BE
+  // readUnsInt16BE
 
   @Test(expectedExceptions = EOFException.class)
-  public void readUnsignedInt16BE_WhenStreamEndsPrematurely() throws Exception {
-    bitcoinStream(0).readUnsignedInt16BE();
+  public void readUnsInt16BE_WhenStreamEndsPrematurely() throws Exception {
+    bitcoinStream(0).readUnsInt16BE();
   }
 
   @Test
-  public void readUnsignedInt16BE() throws Exception {
-    assertEquals(bitcoinStream(0, 0).readUnsignedInt16BE(), 0);
-    assertEquals(bitcoinStream(0, 200).readUnsignedInt16BE(), 200);
-    assertEquals(bitcoinStream(1, 0).readUnsignedInt16BE(), 256);
-    assertEquals(bitcoinStream(255, 255).readUnsignedInt16BE(), 65535);
+  public void readUnsInt16BE() throws Exception {
+    assertEquals(bitcoinStream(0, 0).readUnsInt16BE(), 0);
+    assertEquals(bitcoinStream(0, 200).readUnsInt16BE(), 200);
+    assertEquals(bitcoinStream(1, 0).readUnsInt16BE(), 256);
+    assertEquals(bitcoinStream(255, 255).readUnsInt16BE(), 65535);
   }
 
-  // readUnsignedInt16LE
+  // readUnsInt16LE
 
   @Test(expectedExceptions = EOFException.class)
-  public void readUnsignedInt16LE_WhenStreamEndsPrematurely() throws Exception {
-    bitcoinStream(0).readUnsignedInt16LE();
+  public void readUnsInt16LE_WhenStreamEndsPrematurely() throws Exception {
+    bitcoinStream(0).readUnsInt16LE();
   }
 
   @Test
-  public void readUnsignedInt16LE() throws Exception {
-    assertEquals(bitcoinStream(0, 0).readUnsignedInt16LE(), 0);
-    assertEquals(bitcoinStream(200, 0).readUnsignedInt16LE(), 200);
-    assertEquals(bitcoinStream(0, 1).readUnsignedInt16LE(), 256);
-    assertEquals(bitcoinStream(255, 255).readUnsignedInt16LE(), 65535);
+  public void readUnsInt16LE() throws Exception {
+    assertEquals(bitcoinStream(0, 0).readUnsInt16LE(), 0);
+    assertEquals(bitcoinStream(200, 0).readUnsInt16LE(), 200);
+    assertEquals(bitcoinStream(0, 1).readUnsInt16LE(), 256);
+    assertEquals(bitcoinStream(255, 255).readUnsInt16LE(), 65535);
   }
 
-  // readUnsignedInt32LE
+  // readUnsInt32LE
 
   @Test(expectedExceptions = EOFException.class)
-  public void readUnsignedInt32LE_WhenStreamEndsPrematurely() throws Exception {
-    bitcoinStream(0, 0, 0).readUnsignedInt32LE();
+  public void readUnsInt32LE_WhenStreamEndsPrematurely() throws Exception {
+    bitcoinStream(0, 0, 0).readUnsInt32LE();
   }
 
   @Test
-  public void readUnsignedInt32LE() throws Exception {
-    assertEquals(bitcoinStream(0, 0, 0, 0).readUnsignedInt32LE(), 0);
-    assertEquals(bitcoinStream(200, 0, 0, 0).readUnsignedInt32LE(), 200);
-    assertEquals(bitcoinStream(0, 1, 0, 0).readUnsignedInt32LE(), 256);
-    assertEquals(bitcoinStream(0, 0, 1, 0).readUnsignedInt32LE(), 65536);
-    assertEquals(bitcoinStream(0, 0, 0, 1).readUnsignedInt32LE(), 16777216L);
-    assertEquals(bitcoinStream(255, 255, 255, 255).readUnsignedInt32LE(), 4294967295L);
+  public void readUnsInt32LE() throws Exception {
+    assertEquals(bitcoinStream(0, 0, 0, 0).readUnsInt32LE(), 0);
+    assertEquals(bitcoinStream(200, 0, 0, 0).readUnsInt32LE(), 200);
+    assertEquals(bitcoinStream(0, 1, 0, 0).readUnsInt32LE(), 256);
+    assertEquals(bitcoinStream(0, 0, 1, 0).readUnsInt32LE(), 65536);
+    assertEquals(bitcoinStream(0, 0, 0, 1).readUnsInt32LE(), 16777216L);
+    assertEquals(bitcoinStream(255, 255, 255, 255).readUnsInt32LE(), 4294967295L);
   }
 
-  // readUnsignedInt64LE
+  // readUnsInt64LE
 
   @Test(expectedExceptions = EOFException.class)
-  public void readUnsignedInt64LE_WhenStreamEndsPrematurely() throws Exception {
-    bitcoinStream(0, 0, 0, 0, 0, 0, 0).readUnsignedInt64LE();
+  public void readUnsInt64LE_WhenStreamEndsPrematurely() throws Exception {
+    bitcoinStream(0, 0, 0, 0, 0, 0, 0).readUnsInt64LE();
   }
 
   @Test
-  public void readUnsignedInt64LE() throws Exception {
-    assertEquals(bitcoinStream(0, 0, 0, 0, 0, 0, 0, 0).readUnsignedInt64LE(), BigInteger.valueOf(0));
-    assertEquals(bitcoinStream(200, 0, 0, 0, 0, 0, 0, 0).readUnsignedInt64LE(), BigInteger.valueOf(200));
-    assertEquals(bitcoinStream(0, 1, 0, 0, 0, 0, 0, 0).readUnsignedInt64LE(), BigInteger.valueOf(256));
-    assertEquals(bitcoinStream(0, 0, 1, 0, 0, 0, 0, 0).readUnsignedInt64LE(), BigInteger.valueOf(65536));
-    assertEquals(bitcoinStream(0, 0, 0, 1, 0, 0, 0, 0).readUnsignedInt64LE(), BigInteger.valueOf(16777216L));
-    assertEquals(bitcoinStream(0, 0, 0, 0, 1, 0, 0, 0).readUnsignedInt64LE(), BigInteger.valueOf(4294967296L));
-    assertEquals(bitcoinStream(0, 0, 0, 0, 0, 1, 0, 0).readUnsignedInt64LE(), BigInteger.valueOf(1099511627776L));
-    assertEquals(bitcoinStream(0, 0, 0, 0, 0, 0, 1, 0).readUnsignedInt64LE(), BigInteger.valueOf(281474976710656L));
-    assertEquals(bitcoinStream(255, 255, 255, 255, 255, 255, 255, 127).readUnsignedInt64LE(), BigInteger.valueOf(Long.MAX_VALUE));
-    assertEquals(bitcoinStream(0, 0, 0, 0, 0, 0, 0, 128).readUnsignedInt64LE(), new BigInteger("9223372036854775808"));  // 256**7 * 128
-    assertEquals(bitcoinStream(255, 255, 255, 255, 255, 255, 255, 255).readUnsignedInt64LE(), new BigInteger("18446744073709551615")); // 256**8
+  public void readUnsInt64LE() throws Exception {
+    assertEquals(bitcoinStream(0, 0, 0, 0, 0, 0, 0, 0).readUnsInt64LE(), BigInteger.valueOf(0));
+    assertEquals(bitcoinStream(200, 0, 0, 0, 0, 0, 0, 0).readUnsInt64LE(), BigInteger.valueOf(200));
+    assertEquals(bitcoinStream(0, 1, 0, 0, 0, 0, 0, 0).readUnsInt64LE(), BigInteger.valueOf(256));
+    assertEquals(bitcoinStream(0, 0, 1, 0, 0, 0, 0, 0).readUnsInt64LE(), BigInteger.valueOf(65536));
+    assertEquals(bitcoinStream(0, 0, 0, 1, 0, 0, 0, 0).readUnsInt64LE(), BigInteger.valueOf(16777216L));
+    assertEquals(bitcoinStream(0, 0, 0, 0, 1, 0, 0, 0).readUnsInt64LE(), BigInteger.valueOf(4294967296L));
+    assertEquals(bitcoinStream(0, 0, 0, 0, 0, 1, 0, 0).readUnsInt64LE(), BigInteger.valueOf(1099511627776L));
+    assertEquals(bitcoinStream(0, 0, 0, 0, 0, 0, 1, 0).readUnsInt64LE(), BigInteger.valueOf(281474976710656L));
+    assertEquals(bitcoinStream(255, 255, 255, 255, 255, 255, 255, 127).readUnsInt64LE(), BigInteger.valueOf(Long.MAX_VALUE));
+    assertEquals(bitcoinStream(0, 0, 0, 0, 0, 0, 0, 128).readUnsInt64LE(), new BigInteger("9223372036854775808"));  // 256**7 * 128
+    assertEquals(bitcoinStream(255, 255, 255, 255, 255, 255, 255, 255).readUnsInt64LE(), new BigInteger("18446744073709551615")); // 256**8
   }
 
   // readInt32LE
@@ -198,38 +198,38 @@ public class BitcoinInputStreamTest extends BaseTest {
     assertEquals(bitcoinStream(0, 0, 0, 0, 0, 0, 0, 128).readInt64LE(), Long.MIN_VALUE);
   }
 
-  // readUnsignedVarInt
+  // readUnsVarInt
 
   @Test
-  public void readVarUnsignedInt() throws Exception {
-    // 1 byte (unsignedint8_t)
-    assertEquals( bitcoinStream(0).readUnsignedVarInt(),   BigInteger.valueOf(0) );
-    assertEquals( bitcoinStream(128).readUnsignedVarInt(), BigInteger.valueOf(128) );
-    assertEquals( bitcoinStream(252).readUnsignedVarInt(), BigInteger.valueOf(252) );
+  public void readVarUnsInt() throws Exception {
+    // 1 byte (uint8_t)
+    assertEquals( bitcoinStream(0).readUnsVarInt(),   BigInteger.valueOf(0) );
+    assertEquals( bitcoinStream(128).readUnsVarInt(), BigInteger.valueOf(128) );
+    assertEquals( bitcoinStream(252).readUnsVarInt(), BigInteger.valueOf(252) );
 
-    // 3 bytes (253 + unsignedint16_t)
-    assertEquals( bitcoinStream(253, 253, 0).readUnsignedVarInt(), BigInteger.valueOf(253) );
-    assertEquals( bitcoinStream(253, 254, 0).readUnsignedVarInt(), BigInteger.valueOf(254) );
-    assertEquals( bitcoinStream(253, 255, 0).readUnsignedVarInt(), BigInteger.valueOf(255) );
-    assertEquals( bitcoinStream(253, 0, 1).readUnsignedVarInt(), BigInteger.valueOf(256));
-    assertEquals( bitcoinStream(253, 255, 255).readUnsignedVarInt(), BigInteger.valueOf(65535) );
+    // 3 bytes (253 + uint16_t)
+    assertEquals( bitcoinStream(253, 253, 0).readUnsVarInt(), BigInteger.valueOf(253) );
+    assertEquals( bitcoinStream(253, 254, 0).readUnsVarInt(), BigInteger.valueOf(254) );
+    assertEquals( bitcoinStream(253, 255, 0).readUnsVarInt(), BigInteger.valueOf(255) );
+    assertEquals( bitcoinStream(253, 0, 1).readUnsVarInt(), BigInteger.valueOf(256));
+    assertEquals( bitcoinStream(253, 255, 255).readUnsVarInt(), BigInteger.valueOf(65535) );
 
-    // 5 bytes (254 + unsignedint32_t)
-    assertEquals( bitcoinStream(254, 0, 0, 1, 0).readUnsignedVarInt(), BigInteger.valueOf(65536) );
-    assertEquals( bitcoinStream(254, 1, 0, 1, 0).readUnsignedVarInt(), BigInteger.valueOf(65537) );
-    assertEquals( bitcoinStream(254, 0, 0, 0, 1).readUnsignedVarInt(), BigInteger.valueOf(16777216) );
-    assertEquals( bitcoinStream(254, 1, 0, 0, 1).readUnsignedVarInt(), BigInteger.valueOf(16777217) );
-    assertEquals( bitcoinStream(254, 255, 255, 255, 255).readUnsignedVarInt(), BigInteger.valueOf(4294967295L) );
+    // 5 bytes (254 + uint32_t)
+    assertEquals( bitcoinStream(254, 0, 0, 1, 0).readUnsVarInt(), BigInteger.valueOf(65536) );
+    assertEquals( bitcoinStream(254, 1, 0, 1, 0).readUnsVarInt(), BigInteger.valueOf(65537) );
+    assertEquals( bitcoinStream(254, 0, 0, 0, 1).readUnsVarInt(), BigInteger.valueOf(16777216) );
+    assertEquals( bitcoinStream(254, 1, 0, 0, 1).readUnsVarInt(), BigInteger.valueOf(16777217) );
+    assertEquals( bitcoinStream(254, 255, 255, 255, 255).readUnsVarInt(), BigInteger.valueOf(4294967295L) );
 
-    // 9 bytes (255 + unsignedint64_t)
-    assertEquals( bitcoinStream(255, 0, 0, 0, 0, 1, 0, 0, 0).readUnsignedVarInt(), BigInteger.valueOf(4294967296L) );
-    assertEquals( bitcoinStream(255, 1, 0, 0, 0, 1, 0, 0, 0).readUnsignedVarInt(), BigInteger.valueOf(4294967297L) );
-    assertEquals( bitcoinStream(255, 0, 0, 0, 0, 0, 1, 0, 0).readUnsignedVarInt(), BigInteger.valueOf(1099511627776L) );
-    assertEquals( bitcoinStream(255, 0, 0, 0, 0, 0, 0, 1, 0).readUnsignedVarInt(), BigInteger.valueOf(281474976710656L) );
-    assertEquals( bitcoinStream(255, 0, 0, 0, 0, 0, 0, 0, 1).readUnsignedVarInt(), BigInteger.valueOf(72057594037927936L) );
-    assertEquals( bitcoinStream(255, 255, 255, 255, 255, 255, 255, 255, 127).readUnsignedVarInt(), BigInteger.valueOf(9223372036854775807L) );
-    assertEquals( bitcoinStream(255, 0, 0, 0, 0, 0, 0, 0, 128).readUnsignedVarInt(), new BigInteger("9223372036854775808"));  // 256**7 * 128
-    assertEquals( bitcoinStream(255, 255, 255, 255, 255, 255, 255, 255, 255).readUnsignedVarInt(), new BigInteger("18446744073709551615") ); // 256**8
+    // 9 bytes (255 + uint64_t)
+    assertEquals( bitcoinStream(255, 0, 0, 0, 0, 1, 0, 0, 0).readUnsVarInt(), BigInteger.valueOf(4294967296L) );
+    assertEquals( bitcoinStream(255, 1, 0, 0, 0, 1, 0, 0, 0).readUnsVarInt(), BigInteger.valueOf(4294967297L) );
+    assertEquals( bitcoinStream(255, 0, 0, 0, 0, 0, 1, 0, 0).readUnsVarInt(), BigInteger.valueOf(1099511627776L) );
+    assertEquals( bitcoinStream(255, 0, 0, 0, 0, 0, 0, 1, 0).readUnsVarInt(), BigInteger.valueOf(281474976710656L) );
+    assertEquals( bitcoinStream(255, 0, 0, 0, 0, 0, 0, 0, 1).readUnsVarInt(), BigInteger.valueOf(72057594037927936L) );
+    assertEquals( bitcoinStream(255, 255, 255, 255, 255, 255, 255, 255, 127).readUnsVarInt(), BigInteger.valueOf(9223372036854775807L) );
+    assertEquals( bitcoinStream(255, 0, 0, 0, 0, 0, 0, 0, 128).readUnsVarInt(), new BigInteger("9223372036854775808"));  // 256**7 * 128
+    assertEquals( bitcoinStream(255, 255, 255, 255, 255, 255, 255, 255, 255).readUnsVarInt(), new BigInteger("18446744073709551615") ); // 256**8
   }
 
   // readVarString

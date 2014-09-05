@@ -44,30 +44,30 @@ public class Block {
     int sizeInBytes = (int) getSizeInBytes();
     BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(sizeInBytes));
     serializeHeader(out);
-    out.writeUnsignedVarInt(txns.size());
+    out.writeUnsVarInt(txns.size());
     for (Tx tx : txns)
       out.write(tx.serialize());
     return out.toByteArray();
   }
 
   public void serializeHeader(BitcoinOutputStream out) throws IOException {
-    out.writeUnsignedInt32LE(version);
+    out.writeUnsInt32LE(version);
     out.writeSha256HashLE(prevHash);
     out.writeSha256HashLE(mrklRoot);
-    out.writeUnsignedInt32LE(timestamp);
-    out.writeUnsignedInt32LE(bits);
-    out.writeUnsignedInt32LE(nonce);
+    out.writeUnsInt32LE(timestamp);
+    out.writeUnsInt32LE(bits);
+    out.writeUnsInt32LE(nonce);
   }
 
   public static Block deserialize(BitcoinInputStream in) throws IOException {
-    long version = in.readUnsignedInt32LE();
+    long version = in.readUnsInt32LE();
     Sha256Hash prevHash = in.readSha256Hash();
     Sha256Hash mrklRoot = in.readSha256Hash();
-    long timestamp = in.readUnsignedInt32LE();
-    long bits = in.readUnsignedInt32LE();
-    long nonce = in.readUnsignedInt32LE();
-    BigInteger numberOfTx = in.readUnsignedVarInt();
-    long size = HEADER_SIZE_IN_BYTES + Wire.unsignedIntVarSizeInBytes(numberOfTx.longValue()); // about 81 or 83, theoretically up to 85
+    long timestamp = in.readUnsInt32LE();
+    long bits = in.readUnsInt32LE();
+    long nonce = in.readUnsInt32LE();
+    BigInteger numberOfTx = in.readUnsVarInt();
+    long size = HEADER_SIZE_IN_BYTES + Wire.unsIntVarSizeInBytes(numberOfTx.longValue()); // about 81 or 83, theoretically up to 85
     ImmutableList.Builder<Tx> txns = new ImmutableList.Builder<>();
     for (long i = 0; i < numberOfTx.longValue(); i++) {
       Tx tx = Tx.deserialize(in);
@@ -122,7 +122,7 @@ public class Block {
    */
   public long getSizeInBytes() {
     return HEADER_SIZE_IN_BYTES +
-      Wire.unsignedIntVarSizeInBytes(txns.size()) +
+      Wire.unsIntVarSizeInBytes(txns.size()) +
       txns.stream().mapToLong(Tx::getSizeInBytes).sum();
   }
 

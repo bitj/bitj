@@ -19,19 +19,19 @@ public class PeerAddress {
 
   public byte[] serialize() throws IOException {
     BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(30));
-    out.writeUnsignedInt32LE(timestampOfTheLastMessage);
-    out.writeUnsignedInt64LE(services);
+    out.writeUnsInt32LE(timestampOfTheLastMessage);
+    out.writeUnsInt64LE(services);
     out.writeIP(ip);
-    out.writeUnsignedInt16BE(port);
+    out.writeUnsInt16BE(port);
     return out.toByteArray();
   }
 
   public static PeerAddress deserialize(BitcoinInputStream in) throws IOException {
     PeerAddress addr = new PeerAddress();
-    addr.timestampOfTheLastMessage = in.readUnsignedInt32LE();
+    addr.timestampOfTheLastMessage = in.readUnsInt32LE();
     addr.services = in.readInt64LE();
     addr.ip = in.readIP();
-    addr.port = in.readUnsignedInt16BE();
+    addr.port = in.readUnsInt16BE();
     return addr;
   }
 

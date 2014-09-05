@@ -51,11 +51,11 @@ public class VersionMsg extends Msg {
   public byte[] serializePayload() throws IOException {
     BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(192));
     out.writeInt32LE(version);
-    out.writeUnsignedInt64LE(services);
-    out.writeUnsignedInt64LE(timestamp);
+    out.writeUnsInt64LE(services);
+    out.writeUnsInt64LE(timestamp);
     out.write(LOCALHOST_NET_ADDR);
     out.write(LOCALHOST_NET_ADDR);
-    out.writeUnsignedInt64LE(nonce);
+    out.writeUnsInt64LE(nonce);
     out.writeVarString(userAgent);
     out.writeInt32LE(startHeight);
     if (version >= 70001)
@@ -65,7 +65,7 @@ public class VersionMsg extends Msg {
 
   public static VersionMsg deserializePayload(BitcoinInputStream in) throws IOException {
     int version = in.readInt32LE();
-    throwIfPeerVersionIsTooLow(version);
+    throwIfPeerVersionTooOld(version);
     long services = in.readInt64LE();
     long timestamp = in.readInt64LE();
     in.skipFully(52);
@@ -86,7 +86,7 @@ public class VersionMsg extends Msg {
       .get();
   }
 
-  private static void throwIfPeerVersionIsTooLow(int version) throws Incompatible {
+  private static void throwIfPeerVersionTooOld(int version) throws Incompatible {
     if (version < MIN_PROTOCOL_VERSION)
       throw new VersionMsg.Incompatible("Peer protocol version is " + version + " < " + MIN_PROTOCOL_VERSION);
   }

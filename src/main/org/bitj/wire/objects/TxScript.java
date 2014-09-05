@@ -36,13 +36,13 @@ public class TxScript {
 
   public byte[] serialize() throws IOException {
     BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(128)); // TODO: how long is script typically?
-    out.writeUnsignedVarInt(bytes.length);
+    out.writeUnsVarInt(bytes.length);
     out.write(bytes);
     return out.toByteArray();
   }
 
   public static TxScript deserialize(BitcoinInputStream in, Type type) throws IOException {
-    BigInteger scriptSize = in.readUnsignedVarInt();
+    BigInteger scriptSize = in.readUnsVarInt();
     throwIfScriptSizeIsInvalid(scriptSize, type);
     byte[] bytes = in.readBytes(scriptSize.intValue());
     return new TxScript(bytes);
@@ -61,7 +61,7 @@ public class TxScript {
   }
 
   public long getSizeInBytes() {
-    return Wire.unsignedIntVarSizeInBytes(bytes.length) + bytes.length;
+    return Wire.unsIntVarSizeInBytes(bytes.length) + bytes.length;
   }
 
   @Override

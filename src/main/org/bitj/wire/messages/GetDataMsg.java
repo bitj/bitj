@@ -30,14 +30,14 @@ public class GetDataMsg extends Msg {
   @Override
   public byte[] serializePayload() throws IOException {
     BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(9 + invItems.size() * 36));
-    out.writeUnsignedVarInt(invItems.size());
+    out.writeUnsVarInt(invItems.size());
     for (InvItem invItem : invItems)
       out.write(invItem.serialize());
     return out.toByteArray();
   }
 
   public static GetDataMsg deserializePayload(BitcoinInputStream in) throws IOException {
-    BigInteger count = in.readUnsignedVarInt();
+    BigInteger count = in.readUnsVarInt();
     if (count.compareTo(MAX_INV_ITEMS) > 0)
       throw new TooMany("Peer sent " + count + " > " + MAX_INV_ITEMS + " inv items");
     ImmutableSet.Builder<InvItem> builder = new ImmutableSet.Builder<InvItem>();

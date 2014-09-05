@@ -41,167 +41,167 @@ public class WireTest extends BaseTest {
     assertEquals( Wire.int64ToBytesLE(-1),              bytes(255, 255, 255, 255, 255, 255, 255, 255) );
   }
 
-  // unsignedInt16ToBytesBE
+  // unsInt16ToBytesBE
 
   @Test
-  public void unsignedInt16ToBytesBE() throws Exception {
-    assertEquals( Wire.unsignedInt16ToBytesBE(0),     bytes(0, 0) );
-    assertEquals( Wire.unsignedInt16ToBytesBE(1),     bytes(0, 1) );
-    assertEquals( Wire.unsignedInt16ToBytesBE(256),   bytes(1, 0) );
-    assertEquals( Wire.unsignedInt16ToBytesBE(65534), bytes(255, 254) );
-    assertEquals( Wire.unsignedInt16ToBytesBE(65535), bytes(255, 255) );
+  public void unsInt16ToBytesBE() throws Exception {
+    assertEquals( Wire.unsInt16ToBytesBE(0),     bytes(0, 0) );
+    assertEquals( Wire.unsInt16ToBytesBE(1),     bytes(0, 1) );
+    assertEquals( Wire.unsInt16ToBytesBE(256),   bytes(1, 0) );
+    assertEquals( Wire.unsInt16ToBytesBE(65534), bytes(255, 254) );
+    assertEquals( Wire.unsInt16ToBytesBE(65535), bytes(255, 255) );
   }
 
   @Test( expectedExceptions = IllegalArgumentException.class )
-  public void unsignedInt16ToBytesBE_WhenValueIsToSmall() throws Exception {
-    Wire.unsignedInt16ToBytesBE(-1);
+  public void unsInt16ToBytesBE_WhenValueIsToSmall() throws Exception {
+    Wire.unsInt16ToBytesBE(-1);
   }
 
   @Test( expectedExceptions = IllegalArgumentException.class )
-  public void unsignedInt16ToBytesBE_WhenValueToLarge() throws Exception {
-    Wire.unsignedInt16ToBytesBE(65536);
+  public void unsInt16ToBytesBE_WhenValueToLarge() throws Exception {
+    Wire.unsInt16ToBytesBE(65536);
   }
 
-  // unsignedInt16ToBytesLE
+  // unsInt16ToBytesLE
 
   @Test
-  public void unsignedInt16ToBytesLE() throws Exception {
-    assertEquals( Wire.unsignedInt16ToBytesLE(0),     bytes(0, 0) );
-    assertEquals( Wire.unsignedInt16ToBytesLE(1),     bytes(1, 0) );
-    assertEquals( Wire.unsignedInt16ToBytesLE(256),   bytes(0, 1) );
-    assertEquals( Wire.unsignedInt16ToBytesLE(65534), bytes(254, 255) );
-    assertEquals( Wire.unsignedInt16ToBytesLE(65535), bytes(255, 255) );
+  public void unsInt16ToBytesLE() throws Exception {
+    assertEquals( Wire.unsInt16ToBytesLE(0),     bytes(0, 0) );
+    assertEquals( Wire.unsInt16ToBytesLE(1),     bytes(1, 0) );
+    assertEquals( Wire.unsInt16ToBytesLE(256),   bytes(0, 1) );
+    assertEquals( Wire.unsInt16ToBytesLE(65534), bytes(254, 255) );
+    assertEquals( Wire.unsInt16ToBytesLE(65535), bytes(255, 255) );
   }
 
   @Test( expectedExceptions = IllegalArgumentException.class )
-  public void unsignedInt16ToBytesLE_WhenValueIsToSmall() throws Exception {
-    Wire.unsignedInt16ToBytesLE(-1);
+  public void unsInt16ToBytesLE_WhenValueIsToSmall() throws Exception {
+    Wire.unsInt16ToBytesLE(-1);
   }
 
   @Test( expectedExceptions = IllegalArgumentException.class )
-  public void unsignedInt16ToBytesLE_WhenValueToLarge() throws Exception {
-    Wire.unsignedInt16ToBytesLE(65536);
+  public void unsInt16ToBytesLE_WhenValueToLarge() throws Exception {
+    Wire.unsInt16ToBytesLE(65536);
   }
 
-  // unsignedInt32ToBytesLE
+  // unsInt32ToBytesLE
 
   @Test
-  public void unsignedInt32ToBytesLE() throws Exception {
-    assertEquals( Wire.unsignedInt32ToBytesLE(0),        bytes(0, 0, 0, 0) );
-    assertEquals( Wire.unsignedInt32ToBytesLE(1),        bytes(1, 0, 0, 0) );
-    assertEquals( Wire.unsignedInt32ToBytesLE(256),      bytes(0, 1, 0, 0) );
-    assertEquals( Wire.unsignedInt32ToBytesLE(65536),    bytes(0, 0, 1, 0) );
-    assertEquals( Wire.unsignedInt32ToBytesLE(16777216), bytes(0, 0, 0, 1) );
-    assertEquals( Wire.unsignedInt32ToBytesLE(65534),    bytes(254, 255, 0, 0) );
-    assertEquals( Wire.unsignedInt32ToBytesLE(4294967295L), bytes(255, 255, 255, 255) );
+  public void unsInt32ToBytesLE() throws Exception {
+    assertEquals( Wire.unsInt32ToBytesLE(0),        bytes(0, 0, 0, 0) );
+    assertEquals( Wire.unsInt32ToBytesLE(1),        bytes(1, 0, 0, 0) );
+    assertEquals( Wire.unsInt32ToBytesLE(256),      bytes(0, 1, 0, 0) );
+    assertEquals( Wire.unsInt32ToBytesLE(65536),    bytes(0, 0, 1, 0) );
+    assertEquals( Wire.unsInt32ToBytesLE(16777216), bytes(0, 0, 0, 1) );
+    assertEquals( Wire.unsInt32ToBytesLE(65534),    bytes(254, 255, 0, 0) );
+    assertEquals( Wire.unsInt32ToBytesLE(4294967295L), bytes(255, 255, 255, 255) );
   }
 
   @Test( expectedExceptions = IllegalArgumentException.class )
-  public void unsignedInt32ToBytesLE_WhenValueIsToSmall() throws Exception {
-    Wire.unsignedInt32ToBytesLE(-1);
+  public void unsInt32ToBytesLE_WhenValueIsToSmall() throws Exception {
+    Wire.unsInt32ToBytesLE(-1);
   }
 
   @Test( expectedExceptions = IllegalArgumentException.class )
-  public void unsignedInt32ToBytesLE_WhenValueToLarge() throws Exception {
-    Wire.unsignedInt32ToBytesLE(4294967296L);
+  public void unsInt32ToBytesLE_WhenValueToLarge() throws Exception {
+    Wire.unsInt32ToBytesLE(4294967296L);
   }
 
-  // unsignedInt64ToBytesLE
+  // unsInt64ToBytesLE
 
   @Test(expectedExceptions = IllegalArgumentException.class)
-  public void unsignedInt64ToBytesLE_WhenArgumentIsNegative() throws Exception {
-    Wire.unsignedInt64ToBytesLE(-1);
+  public void unsInt64ToBytesLE_WhenArgumentIsNegative() throws Exception {
+    Wire.unsInt64ToBytesLE(-1);
   }
 
   @Test
-  public void unsignedInt64ToBytesLE() throws Exception {
-    assertEquals( Wire.unsignedInt64ToBytesLE(new BigInteger("0")),             bytes(0, 0, 0, 0, 0, 0, 0, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(new BigInteger("1")),             bytes(1, 0, 0, 0, 0, 0, 0, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(new BigInteger("256")),           bytes(0, 1, 0, 0, 0, 0, 0, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(new BigInteger("65536")),         bytes(0, 0, 1, 0, 0, 0, 0, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(new BigInteger("16777216")),      bytes(0, 0, 0, 1, 0, 0, 0, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(new BigInteger("4294967296")),    bytes(0, 0, 0, 0, 1, 0, 0, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(new BigInteger("1099511627776")), bytes(0, 0, 0, 0, 0, 1, 0, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(new BigInteger("281474976710656")), bytes(0, 0, 0, 0, 0, 0, 1, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(new BigInteger("72057594037927936")), bytes(0, 0, 0, 0, 0, 0, 0, 1) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(new BigInteger("72057594037927937")), bytes(1, 0, 0, 0, 0, 0, 0, 1) );
+  public void unsInt64ToBytesLE() throws Exception {
+    assertEquals( Wire.unsInt64ToBytesLE(new BigInteger("0")),             bytes(0, 0, 0, 0, 0, 0, 0, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(new BigInteger("1")),             bytes(1, 0, 0, 0, 0, 0, 0, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(new BigInteger("256")),           bytes(0, 1, 0, 0, 0, 0, 0, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(new BigInteger("65536")),         bytes(0, 0, 1, 0, 0, 0, 0, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(new BigInteger("16777216")),      bytes(0, 0, 0, 1, 0, 0, 0, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(new BigInteger("4294967296")),    bytes(0, 0, 0, 0, 1, 0, 0, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(new BigInteger("1099511627776")), bytes(0, 0, 0, 0, 0, 1, 0, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(new BigInteger("281474976710656")), bytes(0, 0, 0, 0, 0, 0, 1, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(new BigInteger("72057594037927936")), bytes(0, 0, 0, 0, 0, 0, 0, 1) );
+    assertEquals( Wire.unsInt64ToBytesLE(new BigInteger("72057594037927937")), bytes(1, 0, 0, 0, 0, 0, 0, 1) );
 
-    assertEquals( Wire.unsignedInt64ToBytesLE(0),               bytes(0, 0, 0, 0, 0, 0, 0, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(1),               bytes(1, 0, 0, 0, 0, 0, 0, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(256),             bytes(0, 1, 0, 0, 0, 0, 0, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(65536),           bytes(0, 0, 1, 0, 0, 0, 0, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(16777216),        bytes(0, 0, 0, 1, 0, 0, 0, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(4294967296L),     bytes(0, 0, 0, 0, 1, 0, 0, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(1099511627776L),  bytes(0, 0, 0, 0, 0, 1, 0, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(281474976710656L),bytes(0, 0, 0, 0, 0, 0, 1, 0) );
-    assertEquals( Wire.unsignedInt64ToBytesLE(Long.MAX_VALUE),  bytes(255, 255, 255, 255, 255, 255, 255, 127) );
+    assertEquals( Wire.unsInt64ToBytesLE(0),               bytes(0, 0, 0, 0, 0, 0, 0, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(1),               bytes(1, 0, 0, 0, 0, 0, 0, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(256),             bytes(0, 1, 0, 0, 0, 0, 0, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(65536),           bytes(0, 0, 1, 0, 0, 0, 0, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(16777216),        bytes(0, 0, 0, 1, 0, 0, 0, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(4294967296L),     bytes(0, 0, 0, 0, 1, 0, 0, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(1099511627776L),  bytes(0, 0, 0, 0, 0, 1, 0, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(281474976710656L),bytes(0, 0, 0, 0, 0, 0, 1, 0) );
+    assertEquals( Wire.unsInt64ToBytesLE(Long.MAX_VALUE),  bytes(255, 255, 255, 255, 255, 255, 255, 127) );
   }
 
   @Test( expectedExceptions = IllegalArgumentException.class )
-  public void unsignedInt64ToBytesLE_WhenValueIsToSmall() throws Exception {
-    Wire.unsignedInt64ToBytesLE(new BigInteger("-1"));
-    Wire.unsignedInt64ToBytesLE(-1);
+  public void unsInt64ToBytesLE_WhenValueIsToSmall() throws Exception {
+    Wire.unsInt64ToBytesLE(new BigInteger("-1"));
+    Wire.unsInt64ToBytesLE(-1);
   }
 
   @Test( expectedExceptions = IllegalArgumentException.class )
-  public void unsignedInt64ToBytesLE_WhenValueToLarge() throws Exception {
-    Wire.unsignedInt64ToBytesLE(new BigInteger("18446744073709551616"));
+  public void unsInt64ToBytesLE_WhenValueToLarge() throws Exception {
+    Wire.unsInt64ToBytesLE(new BigInteger("18446744073709551616"));
   }
 
-  // unsignedIntToVarBytes
+  // unsIntToVarBytes
 
   @Test(expectedExceptions = IllegalArgumentException.class)
-  public void unsignedInt64ToVarBytes_WhenArgumentIsNegative() throws Exception {
-    Wire.unsignedIntToVarBytes(-1);
+  public void unsInt64ToVarBytes_WhenArgumentIsNegative() throws Exception {
+    Wire.unsIntToVarBytes(-1);
   }
 
   @Test
-  public void unsignedInt64ToVarBytes() throws Exception {
+  public void unsInt64ToVarBytes() throws Exception {
     // 1 byte (uint8_t)
-    assertEquals( Wire.unsignedIntToVarBytes(0),               bytes(0) );
-    assertEquals( Wire.unsignedIntToVarBytes(128),             bytes(128) );
-    assertEquals( Wire.unsignedIntToVarBytes(252),             bytes(252) );
+    assertEquals( Wire.unsIntToVarBytes(0),               bytes(0) );
+    assertEquals( Wire.unsIntToVarBytes(128),             bytes(128) );
+    assertEquals( Wire.unsIntToVarBytes(252),             bytes(252) );
 
     // 3 bytes (253 + uint16_t)
-    assertEquals( Wire.unsignedIntToVarBytes(253),             bytes(253, 253, 0) );
-    assertEquals( Wire.unsignedIntToVarBytes(254),             bytes(253, 254, 0) );
-    assertEquals( Wire.unsignedIntToVarBytes(255),             bytes(253, 255, 0) );
-    assertEquals( Wire.unsignedIntToVarBytes(256),             bytes(253, 0, 1) );
-    assertEquals( Wire.unsignedIntToVarBytes(65535),           bytes(253, 255, 255) );
+    assertEquals( Wire.unsIntToVarBytes(253),             bytes(253, 253, 0) );
+    assertEquals( Wire.unsIntToVarBytes(254),             bytes(253, 254, 0) );
+    assertEquals( Wire.unsIntToVarBytes(255),             bytes(253, 255, 0) );
+    assertEquals( Wire.unsIntToVarBytes(256),             bytes(253, 0, 1) );
+    assertEquals( Wire.unsIntToVarBytes(65535),           bytes(253, 255, 255) );
 
     // 5 bytes (254 + uint32_t)
-    assertEquals( Wire.unsignedIntToVarBytes(65536),           bytes(254, 0, 0, 1, 0) );
-    assertEquals( Wire.unsignedIntToVarBytes(65537),           bytes(254, 1, 0, 1, 0) );
-    assertEquals( Wire.unsignedIntToVarBytes(16777216),        bytes(254, 0, 0, 0, 1) );
-    assertEquals( Wire.unsignedIntToVarBytes(16777217),        bytes(254, 1, 0, 0, 1) );
-    assertEquals( Wire.unsignedIntToVarBytes(4294967295L),     bytes(254, 255, 255, 255, 255) );
-    assertEquals( Wire.unsignedIntToVarBytes(2147483647L),     bytes(254, 255, 255, 255, 127) );
+    assertEquals( Wire.unsIntToVarBytes(65536),           bytes(254, 0, 0, 1, 0) );
+    assertEquals( Wire.unsIntToVarBytes(65537),           bytes(254, 1, 0, 1, 0) );
+    assertEquals( Wire.unsIntToVarBytes(16777216),        bytes(254, 0, 0, 0, 1) );
+    assertEquals( Wire.unsIntToVarBytes(16777217),        bytes(254, 1, 0, 0, 1) );
+    assertEquals( Wire.unsIntToVarBytes(4294967295L),     bytes(254, 255, 255, 255, 255) );
+    assertEquals( Wire.unsIntToVarBytes(2147483647L),     bytes(254, 255, 255, 255, 127) );
 
     // 9 bytes (255 + uint64_t)
-    assertEquals( Wire.unsignedIntToVarBytes(4294967296L),          bytes(255, 0, 0, 0, 0, 1, 0, 0, 0) );
-    assertEquals( Wire.unsignedIntToVarBytes(4294967297L),          bytes(255, 1, 0, 0, 0, 1, 0, 0, 0) );
-    assertEquals( Wire.unsignedIntToVarBytes(1099511627776L),       bytes(255, 0, 0, 0, 0, 0, 1, 0, 0) );
-    assertEquals( Wire.unsignedIntToVarBytes(281474976710656L),     bytes(255, 0, 0, 0, 0, 0, 0, 1, 0) );
-    assertEquals( Wire.unsignedIntToVarBytes(72057594037927936L),   bytes(255, 0, 0, 0, 0, 0, 0, 0, 1) );
-    assertEquals( Wire.unsignedIntToVarBytes(9223372036854775807L), bytes(255, 255, 255, 255, 255, 255, 255, 255, 127) );
+    assertEquals( Wire.unsIntToVarBytes(4294967296L),          bytes(255, 0, 0, 0, 0, 1, 0, 0, 0) );
+    assertEquals( Wire.unsIntToVarBytes(4294967297L),          bytes(255, 1, 0, 0, 0, 1, 0, 0, 0) );
+    assertEquals( Wire.unsIntToVarBytes(1099511627776L),       bytes(255, 0, 0, 0, 0, 0, 1, 0, 0) );
+    assertEquals( Wire.unsIntToVarBytes(281474976710656L),     bytes(255, 0, 0, 0, 0, 0, 0, 1, 0) );
+    assertEquals( Wire.unsIntToVarBytes(72057594037927936L),   bytes(255, 0, 0, 0, 0, 0, 0, 0, 1) );
+    assertEquals( Wire.unsIntToVarBytes(9223372036854775807L), bytes(255, 255, 255, 255, 255, 255, 255, 255, 127) );
   }
 
   @Test(expectedExceptions = IllegalArgumentException.class)
-  public void unsignedIntVarSizeInBytes_WhenArgumentIsNegative() throws Exception {
-    Wire.unsignedIntVarSizeInBytes(-1);
+  public void unsIntVarSizeInBytes_WhenArgumentIsNegative() throws Exception {
+    Wire.unsIntVarSizeInBytes(-1);
   }
 
   @Test
-  public void unsignedIntVarSizeInBytes() throws Exception {
-    System.out.println(Debug.bytesToHex(Wire.unsignedIntToVarBytes(556)));
-    assertEquals( Wire.unsignedIntVarSizeInBytes(0), 1 );
-    assertEquals( Wire.unsignedIntVarSizeInBytes(252), 1 );
-    assertEquals( Wire.unsignedIntVarSizeInBytes(253), 3 );
-    assertEquals( Wire.unsignedIntVarSizeInBytes(65535), 3 );
-    assertEquals( Wire.unsignedIntVarSizeInBytes(65536), 5 );
-    assertEquals( Wire.unsignedIntVarSizeInBytes(4294967295L), 5 );
-    assertEquals( Wire.unsignedIntVarSizeInBytes(4294967296L), 9 );
-    assertEquals( Wire.unsignedIntVarSizeInBytes(9223372036854775807L), 9 );
+  public void unsIntVarSizeInBytes() throws Exception {
+    System.out.println(Debug.bytesToHex(Wire.unsIntToVarBytes(556)));
+    assertEquals( Wire.unsIntVarSizeInBytes(0), 1 );
+    assertEquals( Wire.unsIntVarSizeInBytes(252), 1 );
+    assertEquals( Wire.unsIntVarSizeInBytes(253), 3 );
+    assertEquals( Wire.unsIntVarSizeInBytes(65535), 3 );
+    assertEquals( Wire.unsIntVarSizeInBytes(65536), 5 );
+    assertEquals( Wire.unsIntVarSizeInBytes(4294967295L), 5 );
+    assertEquals( Wire.unsIntVarSizeInBytes(4294967296L), 9 );
+    assertEquals( Wire.unsIntVarSizeInBytes(9223372036854775807L), 9 );
   }
 
   // stringToVarBytes
@@ -259,8 +259,7 @@ public class WireTest extends BaseTest {
 
   @Test(expectedExceptions = IllegalArgumentException.class)
   public void reverseBytes_WhenGotEvenArray() {
-    Wire.reverseBytes
-      (bytes(0, 255, 127, 128, 33));
+    Wire.reverseBytes(bytes(0, 255, 127, 128, 33));
   }
 
 }

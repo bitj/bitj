@@ -40,8 +40,8 @@ public class GetBlocksMsg extends Msg {
   @Override
   public byte[] serializePayload() throws IOException {
     BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream());
-    out.writeUnsignedInt32LE(version);
-    out.writeUnsignedVarInt(blockLocator.size());
+    out.writeUnsInt32LE(version);
+    out.writeUnsVarInt(blockLocator.size());
     for (Sha256Hash hash : blockLocator)
       out.writeSha256HashLE(hash);
     out.writeSha256HashLE(stopHash);
@@ -49,8 +49,8 @@ public class GetBlocksMsg extends Msg {
   }
 
   public static GetBlocksMsg deserializePayload(BitcoinInputStream in) throws IOException {
-    long version = in.readUnsignedInt32LE();
-    BigInteger length = in.readUnsignedVarInt();
+    long version = in.readUnsInt32LE();
+    BigInteger length = in.readUnsVarInt();
     if (length.compareTo(BigInteger.valueOf(MAX_LOCATOR_OBJECT_SIZE)) > 0)
       throw new TooMany("Locator object claims to contain " + length + " > " + MAX_LOCATOR_OBJECT_SIZE + " block hashes");
     ImmutableList.Builder<Sha256Hash> blockLocator = new ImmutableList.Builder<>();
