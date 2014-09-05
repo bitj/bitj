@@ -12,7 +12,7 @@ import java.io.OutputStream;
 import java.net.ProtocolException;
 import java.util.Arrays;
 
-public abstract class Message {
+public abstract class Msg {
 
   private static final byte[] MAGIC_BYTES = new byte[] { (byte) 0xF9, (byte) 0xBE, (byte) 0xB4, (byte) 0xD9 };
   public static final int MAX_STRING_LENGTH = 4 * 1024; // 4 KB
@@ -29,7 +29,7 @@ public abstract class Message {
     out.flush();
   }
 
-  public static Message deserialize(InputStream is) throws IOException {
+  public static Msg deserialize(InputStream is) throws IOException {
     BitcoinInputStream in = new BitcoinInputStream(is);
 
     in.readMagic(MAGIC_BYTES);
@@ -50,7 +50,7 @@ public abstract class Message {
 
   private static void throwIfTooLarge(long length) throws ProtocolException {
     if (length > MAX_MESSAGE_SIZE)
-      throw new TooLarge("Message to large " + length + " > " + MAX_MESSAGE_SIZE);
+      throw new TooLarge("Msg to large " + length + " > " + MAX_MESSAGE_SIZE);
   }
 
   private static void throwIfChecksumIsInvalid(byte[] payload, byte[] expectedChecksum) throws ProtocolException {
@@ -59,29 +59,29 @@ public abstract class Message {
       throw new InvalidChecksum("Invalid bitcoinChecksum " + Debug.bytesToHex(actualChecksum) + ", expected " + Debug.bytesToHex(expectedChecksum));
   }
 
-  private static Message deserializePayload(BitcoinInputStream in, String messageName) throws IOException {
+  private static Msg deserializePayload(BitcoinInputStream in, String messageName) throws IOException {
     if (messageName.equals("version"))
-      return VersionMessage.deserializePayload(in);
+      return VersionMsg.deserializePayload(in);
     if (messageName.equals("verack"))
-      return VerackMessage.deserializePayload(in);
+      return VerackMsg.deserializePayload(in);
     if (messageName.equals("inv"))
-      return InvMessage.deserializePayload(in);
+      return InvMsg.deserializePayload(in);
     if (messageName.equals("getaddr"))
-      return GetAddrMessage.deserializePayload(in);
+      return GetAddrMsg.deserializePayload(in);
     if (messageName.equals("addr"))
-      return AddrMessage.deserializePayload(in);
+      return AddrMsg.deserializePayload(in);
     if (messageName.equals("getblocks"))
-      return GetBlocksMessage.deserializePayload(in);
+      return GetBlocksMsg.deserializePayload(in);
     if (messageName.equals("getdata"))
-      return GetDataMessage.deserializePayload(in);
+      return GetDataMsg.deserializePayload(in);
     if (messageName.equals("tx"))
-      return TxMessage.deserializePayload(in);
+      return TxMsg.deserializePayload(in);
     if (messageName.equals("block"))
-      return BlockMessage.deserializePayload(in);
+      return BlockMsg.deserializePayload(in);
     if (messageName.equals("getheaders"))
-      return GetHeadersMessage.deserializePayload(in);
+      return GetHeadersMsg.deserializePayload(in);
     if (messageName.equals("headers"))
-      return HeadersMessage.deserializePayload(in);
+      return HeadersMsg.deserializePayload(in);
     throw new Unrecognized("Unknown message name " + messageName);  // TODO: introduce ProtocolException
   }
 

@@ -10,11 +10,10 @@ import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Random;
 
 import static com.google.common.base.Objects.toStringHelper;
 
-public class VersionMessage extends Message {
+public class VersionMsg extends Msg {
 
   public static final int PROTOCOL_VERSION = 70002;
   public static final int MIN_PROTOCOL_VERSION = 31900;
@@ -64,7 +63,7 @@ public class VersionMessage extends Message {
     return out.toByteArray();
   }
 
-  public static VersionMessage deserializePayload(BitcoinInputStream in) throws IOException {
+  public static VersionMsg deserializePayload(BitcoinInputStream in) throws IOException {
     int version = in.readInt32LE();
     throwIfPeerVersionIsTooLow(version);
     long services = in.readInt64LE();
@@ -89,7 +88,7 @@ public class VersionMessage extends Message {
 
   private static void throwIfPeerVersionIsTooLow(int version) throws Incompatible {
     if (version < MIN_PROTOCOL_VERSION)
-      throw new VersionMessage.Incompatible("Peer protocol version is " + version + " < " + MIN_PROTOCOL_VERSION);
+      throw new VersionMsg.Incompatible("Peer protocol version is " + version + " < " + MIN_PROTOCOL_VERSION);
   }
 
   public int getVersion() {
@@ -133,7 +132,7 @@ public class VersionMessage extends Message {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    VersionMessage that = (VersionMessage) o;
+    VersionMsg that = (VersionMsg) o;
     return Objects.equals(this.version, that.version) &&
       Objects.equals(this.services, that.services) &&
       Objects.equals(this.timestamp, that.timestamp) &&
@@ -149,11 +148,11 @@ public class VersionMessage extends Message {
   }
 
   public static class Builder {
-    private VersionMessage versionMessage = new VersionMessage();
+    private VersionMsg versionMessage = new VersionMsg();
 
     public Builder() {}
 
-    public VersionMessage get() { return versionMessage; }
+    public VersionMsg get() { return versionMessage; }
 
     public Builder version(int version) { versionMessage.version = version; return this; }
     public Builder services(long services) { versionMessage.services = services; return this; }

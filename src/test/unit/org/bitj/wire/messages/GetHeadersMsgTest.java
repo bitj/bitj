@@ -7,17 +7,17 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertTrue;
 
-public class GetHeadersMessageTest extends BaseTest {
+public class GetHeadersMsgTest extends BaseTest {
 
   /**
-   * For tests look into GetBlocksMessageTest as GetHeadersMessage is basically derived and renamed GetBlocksMessage.
+   * For tests look into GetBlocksMsgTest as GetHeadersMsg is basically derived and renamed GetBlocksMsg.
    */
 
   @Test
   public void toStringImplemented() throws Exception {
     ImmutableList<Sha256Hash> emptyBlockLocator = new ImmutableList.Builder<Sha256Hash>().build();
-    GetHeadersMessage getHeadersMsg = new GetHeadersMessage(emptyBlockLocator);
-    assertTrue(getHeadersMsg.toString().contains("GetHeadersMessage{"));
+    GetHeadersMsg getHeadersMsg = new GetHeadersMsg(emptyBlockLocator);
+    assertTrue(getHeadersMsg.toString().contains("GetHeadersMsg{"));
   }
 
 }

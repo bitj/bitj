@@ -24,7 +24,7 @@ public class Peer {
   private InputStream in;
   private OutputStream out;
 
-  private VersionMessage version;
+  private VersionMsg version;
 
   private Queue<String> jobs = new ConcurrentLinkedQueue<>();
 
@@ -72,19 +72,19 @@ public class Peer {
   }
 
   private void handleMessage() throws IOException {
-    Message msg = Message.deserialize(in);
+    Msg msg = Msg.deserialize(in);
     // Peer is a client
-    if (msg instanceof VersionMessage)
-      throw new ProtocolException("Unexpected VersionMessage after handshake: " + msg.toString());
-    if (msg instanceof VerackMessage)
-      throw new ProtocolException("Unexpected VerackMessage after handshake: " + msg.toString());
-    if (msg instanceof InvMessage)
+    if (msg instanceof VersionMsg)
+      throw new ProtocolException("Unexpected VersionMsg after handshake: " + msg.toString());
+    if (msg instanceof VerackMsg)
+      throw new ProtocolException("Unexpected VerackMsg after handshake: " + msg.toString());
+    if (msg instanceof InvMsg)
       if (state == ClientState.AWAITING_INV)
-        handle((InvMessage) msg);
+        handle((InvMsg) msg);
       else
         ignore(msg);
-    if (msg instanceof BlockMessage)
-      handle((BlockMessage) msg);
+    if (msg instanceof BlockMsg)
+      handle((BlockMsg) msg);
   }
 
   private boolean jobAvailable() {
@@ -102,7 +102,7 @@ public class Peer {
     }
   }
 
-  private void ignore(Message msg) {
+  private void ignore(Msg msg) {
     System.out.println("Ignoring: " + msg.toString());
   }
 
@@ -110,24 +110,24 @@ public class Peer {
     jobs.add(DOWNLOAD_BLOCKCHAIN);
   }
 
-  private void handle(InvMessage inv) throws IOException {
-    GetDataMessage getdata = new GetDataMessage(inv.getInvItems());
+  private void handle(InvMsg inv) throws IOException {
+    GetDataMsg getdata = new GetDataMsg(inv.getInvItems());
     System.out.println("Sending: " + getdata);
     getdata.serialize(out);
   }
 
-  private void handle(BlockMessage blockMsg) throws IOException {
+  private void handle(BlockMsg blockMsg) throws IOException {
     System.out.println(blockMsg.getBlock().getNonce());
   }
 
   private void sendGetAddr() throws IOException {
-    GetAddrMessage msg = GetAddrMessage.getInstance();
+    GetAddrMsg msg = GetAddrMsg.getInstance();
     System.out.println("Sending: " + msg);
     msg.serialize(out);
   }
 
   private void receiveAddr() throws IOException {
-    AddrMessage msg = (AddrMessage) Message.deserialize(in);
+    AddrMsg msg = (AddrMsg) Msg.deserialize(in);
     System.out.println(msg);
   }
 

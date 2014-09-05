@@ -23,13 +23,13 @@ public class BlockchainDownloader {
   public void start() throws IOException {
     System.out.println("Downloading blockchain...");
     Blockchain blockchain = App.getInstance().getBlockchain();
-    Message msg = null;
-    InvMessage invMsg = null;
+    Msg msg = null;
+    InvMsg invMsg = null;
 
     while (true) {
 
       // Send getblocks to get next part of the inventory
-      GetBlocksMessage getblocks = new GetBlocksMessage(blockchain.getDefaultBlockLocator());
+      GetBlocksMsg getblocks = new GetBlocksMsg(blockchain.getDefaultBlockLocator());
       System.out.println("Sending: " + getblocks);
       getblocks.serialize(out);
 
@@ -39,11 +39,11 @@ public class BlockchainDownloader {
       // Wait for all the blocks (as earlier advertised in the inv)
       int received = 0;
       int expected = invMsg.getInvItems().size();
-      BlockMessage blockMsg = null;
+      BlockMsg blockMsg = null;
       while (true) {
-        msg = Message.deserialize(in);
-        if (msg instanceof BlockMessage) {
-          blockMsg = (BlockMessage) msg;
+        msg = Msg.deserialize(in);
+        if (msg instanceof BlockMsg) {
+          blockMsg = (BlockMsg) msg;
           blockchain.append(blockMsg.getBlock());
           received += 1;
           System.out.println("Received: block " + (blockchain.getHeight()-1) + " / " + blockMsg.getBlock());
@@ -59,9 +59,9 @@ public class BlockchainDownloader {
 
       // get single latest block (orphaned at this point)
       while (true) {
-        msg = Message.deserialize(in);
-        if (msg instanceof BlockMessage) {
-          blockMsg = (BlockMessage) msg;
+        msg = Msg.deserialize(in);
+        if (msg instanceof BlockMsg) {
+          blockMsg = (BlockMsg) msg;
           System.out.println("Received: latest block / " + blockMsg.getBlock());
           break;
         } else {
@@ -73,16 +73,16 @@ public class BlockchainDownloader {
 
   }
 
-  private InvMessage getNextBlockInv() throws IOException {
-    Message msg;
-    InvMessage invMsg;
+  private InvMsg getNextBlockInv() throws IOException {
+    Msg msg;
+    InvMsg invMsg;
     while (true) {
-      msg = Message.deserialize(in);
-      if (msg instanceof InvMessage) {
-        invMsg = (InvMessage) msg;
+      msg = Msg.deserialize(in);
+      if (msg instanceof InvMsg) {
+        invMsg = (InvMsg) msg;
         if (invMsg.getInvItems().asList().get(0).type.equals(InvItem.Type.Block)) {
           System.out.println("Received: " + invMsg);
-          GetDataMessage getdata = new GetDataMessage(invMsg.getInvItems());
+          GetDataMsg getdata = new GetDataMsg(invMsg.getInvItems());
           System.out.println("Sending: " + getdata);
           getdata.serialize(out);
           return invMsg;
@@ -95,7 +95,7 @@ public class BlockchainDownloader {
     }
   }
 
-  private void ignore(Message msg) {
+  private void ignore(Msg msg) {
     System.out.println("Ignoring: " + msg);
   }
 

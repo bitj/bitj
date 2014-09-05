@@ -14,7 +14,7 @@ import java.util.Objects;
 import static com.google.common.base.Objects.ToStringHelper;
 import static com.google.common.base.Objects.toStringHelper;
 
-public class AddrMessage extends Message {
+public class AddrMsg extends Msg {
 
   private ImmutableSet<PeerAddress> peers;
 
@@ -23,7 +23,7 @@ public class AddrMessage extends Message {
     return "addr";
   }
 
-  public AddrMessage(ImmutableSet<PeerAddress> peers) {
+  public AddrMsg(ImmutableSet<PeerAddress> peers) {
     this.peers = peers;
   }
 
@@ -36,14 +36,14 @@ public class AddrMessage extends Message {
     return out.toByteArray();
   }
 
-  public static AddrMessage deserializePayload(BitcoinInputStream in) throws IOException {
+  public static AddrMsg deserializePayload(BitcoinInputStream in) throws IOException {
     BigInteger count = in.readUnsignedVarInt();
     if (count.compareTo(MAX_ADDRESSES) > 0)
       throw new TooMany("Peer sent " + count + " > " + MAX_ADDRESSES + " addresses");
     ImmutableSet.Builder<PeerAddress> builder = new ImmutableSet.Builder<PeerAddress>();
     for (long i = 0; i < count.longValue(); i++)
       builder.add(PeerAddress.deserialize(in));
-    return new AddrMessage(builder.build());
+    return new AddrMsg(builder.build());
   }
 
   @Override
@@ -57,7 +57,7 @@ public class AddrMessage extends Message {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    AddrMessage that = (AddrMessage) o;
+    AddrMsg that = (AddrMsg) o;
     return Objects.equals(this.peers, that.peers);
   }
 

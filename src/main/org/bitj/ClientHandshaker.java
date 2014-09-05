@@ -1,8 +1,8 @@
 package org.bitj;
 
-import org.bitj.wire.messages.Message;
-import org.bitj.wire.messages.VerackMessage;
-import org.bitj.wire.messages.VersionMessage;
+import org.bitj.wire.messages.Msg;
+import org.bitj.wire.messages.VerackMsg;
+import org.bitj.wire.messages.VersionMsg;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,14 +13,14 @@ public class ClientHandshaker {
 
   InputStream in;
   OutputStream out;
-  VersionMessage version;
+  VersionMsg version;
 
   public ClientHandshaker(InputStream in, OutputStream out) {
     this.in = in;
     this.out = out;
   }
 
-  public VersionMessage handshake() throws IOException {
+  public VersionMsg handshake() throws IOException {
     sendVersion();
     receiveVersion();
     sendVerack();
@@ -29,29 +29,29 @@ public class ClientHandshaker {
   }
 
   private void sendVersion() throws IOException {
-    VersionMessage myVersion = new VersionMessage.Builder().get();
+    VersionMsg myVersion = new VersionMsg.Builder().get();
     System.out.println("Sending: " + myVersion);
     myVersion.serialize(out);
   }
 
   private void receiveVersion() throws IOException {
-    Message msg = Message.deserialize(in);
-    if (!(msg instanceof VersionMessage))
-      throw new ProtocolException("Expected VersionMessage, got " + msg.toString());
-    version = (VersionMessage) msg;
+    Msg msg = Msg.deserialize(in);
+    if (!(msg instanceof VersionMsg))
+      throw new ProtocolException("Expected VersionMsg, got " + msg.toString());
+    version = (VersionMsg) msg;
     System.out.println("Received: " + version);
   }
 
   private void sendVerack() throws IOException {
-    VerackMessage verack = VerackMessage.getInstance();
+    VerackMsg verack = VerackMsg.getInstance();
     System.out.println("Sending: " + verack);
     verack.serialize(out);
   }
 
   private void receiveVerack() throws IOException {
-    Message msg = Message.deserialize(in);
-    if (!(msg instanceof VerackMessage))
-      throw new ProtocolException("Expected VerackMessage, got " + msg.toString());
+    Msg msg = Msg.deserialize(in);
+    if (!(msg instanceof VerackMsg))
+      throw new ProtocolException("Expected VerackMsg, got " + msg.toString());
     System.out.println("Received: " + msg);
   }
 

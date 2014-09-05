@@ -13,7 +13,7 @@ import java.io.IOException;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-public class HeadersMessageTest extends BaseTest {
+public class HeadersMsgTest extends BaseTest {
 
   // Examples from https://en.bitcoin.it/wiki/Genesis_block
 
@@ -26,7 +26,7 @@ public class HeadersMessageTest extends BaseTest {
       "00"  // number of transactions
   );
 
-  static HeadersMessage MESSAGE;
+  static HeadersMsg MESSAGE;
 
   static {
     try {
@@ -34,7 +34,7 @@ public class HeadersMessageTest extends BaseTest {
         Block.deserialize(bitcoinStream(BlockTest.SERIALIZED_GENESIS_BLOCK)),  // with 1 tx
         Block.deserialize(bitcoinStream(BlockTest.SERIALIZED_GENESIS_BLOCK))   // with 1 tx
       );
-      MESSAGE = new HeadersMessage(blocks);
+      MESSAGE = new HeadersMsg(blocks);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -53,7 +53,7 @@ public class HeadersMessageTest extends BaseTest {
 
   @Test
   public void serializeEmpty() throws IOException {
-    assertEquals(new HeadersMessage(EMPTY_BLOCK_LIST).serializePayload(), bytes(0));
+    assertEquals(new HeadersMsg(EMPTY_BLOCK_LIST).serializePayload(), bytes(0));
   }
 
   @Test
@@ -64,10 +64,10 @@ public class HeadersMessageTest extends BaseTest {
   @Test
   public void deserializePayload_WhenEmpty() throws IOException {
     BitcoinInputStream in = bitcoinStream(bytes(0));
-    assertEquals(HeadersMessage.deserializePayload(in), new HeadersMessage(EMPTY_BLOCK_LIST));
+    assertEquals(HeadersMsg.deserializePayload(in), new HeadersMsg(EMPTY_BLOCK_LIST));
   }
 
-  @Test(expectedExceptions = HeadersMessage.TooMany.class)
+  @Test(expectedExceptions = HeadersMsg.TooMany.class)
   public void deserializePayload_WhenTooManyItems() throws IOException {
     byte[] maliciousPayload = new byte[PAYLOAD_BYTES.length];
     System.arraycopy(PAYLOAD_BYTES, 0, maliciousPayload, 0, PAYLOAD_BYTES.length);
@@ -75,30 +75,30 @@ public class HeadersMessageTest extends BaseTest {
     maliciousPayload[0] = (byte) 253;
     maliciousPayload[1] = (byte) 0xD1;
     maliciousPayload[2] = (byte) 0x07;
-    HeadersMessage.deserializePayload(bitcoinStream(maliciousPayload));
+    HeadersMsg.deserializePayload(bitcoinStream(maliciousPayload));
   }
 
   @Test
   public void deserializePayload() throws IOException {
     BitcoinInputStream in = bitcoinStream(PAYLOAD_BYTES);
-    assertEquals(HeadersMessage.deserializePayload(in), MESSAGE);
+    assertEquals(HeadersMsg.deserializePayload(in), MESSAGE);
   }
 
   @Test
   public void getSizeInBytes_WhenEmpty() throws Exception {
-    HeadersMessage emptyMsg = new HeadersMessage(EMPTY_BLOCK_LIST);
+    HeadersMsg emptyMsg = new HeadersMsg(EMPTY_BLOCK_LIST);
     assertEquals(emptyMsg.getSizeInBytes(), 1);
   }
 
   @Test
   public void getSizeInBytes() throws Exception {
-    HeadersMessage msg = HeadersMessage.deserializePayload(bitcoinStream(PAYLOAD_BYTES));
+    HeadersMsg msg = HeadersMsg.deserializePayload(bitcoinStream(PAYLOAD_BYTES));
     assertEquals(msg.getSizeInBytes(), 1 + 81 + 81);
   }
 
   @Test
   public void toStringImplemented() throws Exception {
-    assertTrue(MESSAGE.toString().contains("HeadersMessage{"));
+    assertTrue(MESSAGE.toString().contains("HeadersMsg{"));
   }
 
 }

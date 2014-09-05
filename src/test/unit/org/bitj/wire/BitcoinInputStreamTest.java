@@ -2,7 +2,7 @@ package org.bitj.wire;
 
 import org.bitj.BaseTest;
 import org.bitj.Sha256Hash;
-import org.bitj.wire.messages.Message;
+import org.bitj.wire.messages.Msg;
 import org.testng.annotations.Test;
 
 import java.io.EOFException;
@@ -236,12 +236,12 @@ public class BitcoinInputStreamTest extends BaseTest {
 
   @Test(expectedExceptions = EOFException.class)
   public void readVarString_EmptyStream() throws Exception {
-    bitcoinStream().readVarString(Message.MAX_STRING_LENGTH);
+    bitcoinStream().readVarString(Msg.MAX_STRING_LENGTH);
   }
 
   @Test(expectedExceptions = EOFException.class)
   public void readVarString_StreamTooShort() throws Exception {
-    bitcoinStream(3, 1, 2).readVarString(Message.MAX_STRING_LENGTH);
+    bitcoinStream(3, 1, 2).readVarString(Msg.MAX_STRING_LENGTH);
   }
 
   @Test(expectedExceptions = ProtocolException.class)
@@ -252,7 +252,7 @@ public class BitcoinInputStreamTest extends BaseTest {
   @Test
   public void readVarString_SmallString() throws Exception {
     BitcoinInputStream in = bitcoinStream(25, 47, 98, 105, 116, 106, 47, 48, 46, 49, 46, 50, 47, 196, 135, 196, 153, 197, 130, 197, 154, 197, 187, 197, 185, 33);
-    assertEquals( in.readVarString(Message.MAX_STRING_LENGTH), "/bitj/0.1.2/ćęłŚŻŹ!" );
+    assertEquals( in.readVarString(Msg.MAX_STRING_LENGTH), "/bitj/0.1.2/ćęłŚŻŹ!" );
   }
 
   // readIP

@@ -13,7 +13,7 @@ import java.math.BigInteger;
 import java.net.ProtocolException;
 import java.util.List;
 
-public class HeadersMessage extends Message {
+public class HeadersMsg extends Msg {
 
   public static final int MAX_HEADERS = 2000;
   private static final int HEADER_SIZE = 81;     // this is only valid in context of the 'headers' message
@@ -25,7 +25,7 @@ public class HeadersMessage extends Message {
     return "headers";
   }
 
-  public HeadersMessage(ImmutableList<Block> blocks) {
+  public HeadersMsg(ImmutableList<Block> blocks) {
     this.blocks = blocks;
   }
 
@@ -41,7 +41,7 @@ public class HeadersMessage extends Message {
     return out.toByteArray();
   }
 
-  public static HeadersMessage deserializePayload(BitcoinInputStream in) throws IOException {
+  public static HeadersMsg deserializePayload(BitcoinInputStream in) throws IOException {
     BigInteger count = in.readUnsignedVarInt();
     throwIfToMany(count);
     ImmutableList.Builder<Block> blocks = new ImmutableList.Builder<>();
@@ -49,12 +49,12 @@ public class HeadersMessage extends Message {
       Block block = Block.deserialize(in);
       blocks.add(block);
     }
-    return new HeadersMessage(blocks.build());
+    return new HeadersMsg(blocks.build());
   }
 
-  private static void throwIfToMany(BigInteger headers) throws HeadersMessage.TooMany {
+  private static void throwIfToMany(BigInteger headers) throws HeadersMsg.TooMany {
     if (headers.compareTo(BigInteger.valueOf(MAX_HEADERS)) > 0)
-      throw new HeadersMessage.TooMany("Headers message claims to contain " + headers + " > 2000 headers");
+      throw new HeadersMsg.TooMany("Headers message claims to contain " + headers + " > 2000 headers");
   }
 
   public List<Block> getBlocks() { return blocks; }
@@ -72,7 +72,7 @@ public class HeadersMessage extends Message {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    HeadersMessage that = (HeadersMessage) o;
+    HeadersMsg that = (HeadersMsg) o;
     return this.blocks.equals(that.blocks);
   }
 

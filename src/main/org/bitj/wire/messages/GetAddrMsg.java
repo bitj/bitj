@@ -6,13 +6,13 @@ import java.io.IOException;
 
 import static com.google.common.base.Objects.toStringHelper;
 
-public class VerackMessage extends Message {
+public class GetAddrMsg extends Msg {
 
-  private static VerackMessage instance;
+  private static GetAddrMsg instance;
 
   @Override
   public String name() {
-    return "verack";
+    return "getaddr";
   }
 
   @Override
@@ -20,7 +20,7 @@ public class VerackMessage extends Message {
     return new byte[] {};
   }
 
-  public static VerackMessage deserializePayload(BitcoinInputStream in) throws IOException {
+  public static GetAddrMsg deserializePayload(BitcoinInputStream in) throws IOException {
     return getInstance();
   }
 
@@ -29,11 +29,11 @@ public class VerackMessage extends Message {
     return toStringHelper(this.getClass()).toString();
   }
 
-  private VerackMessage() {}
+  private GetAddrMsg() {}
 
-  public static synchronized VerackMessage getInstance() {
+  public static synchronized GetAddrMsg getInstance() {
     if (instance == null)
-      instance = new VerackMessage();
+      instance = new GetAddrMsg();
     return instance;
   }
 

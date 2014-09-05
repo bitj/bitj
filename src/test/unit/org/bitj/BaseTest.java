@@ -3,7 +3,7 @@ package org.bitj;
 import org.bitj.utils.Debug;
 import org.bitj.wire.BitcoinInputStream;
 import org.bitj.wire.Wire;
-import org.bitj.wire.messages.Message;
+import org.bitj.wire.messages.Msg;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -53,9 +53,9 @@ public class BaseTest {
     return new ByteArrayInputStream(bytes(iBytes));
   }
 
-  public static byte[] serializeToBytes(Message message) throws IOException {
+  public static byte[] serializeToBytes(Msg msg) throws IOException {
     ByteArrayOutputStream os = new ByteArrayOutputStream();
-    message.serialize(os);
+    msg.serialize(os);
     return os.toByteArray();
   }
 

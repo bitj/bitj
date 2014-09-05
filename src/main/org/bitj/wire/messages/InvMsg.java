@@ -14,7 +14,7 @@ import java.util.Objects;
 import static com.google.common.base.Objects.ToStringHelper;
 import static com.google.common.base.Objects.toStringHelper;
 
-public class InvMessage extends Message {
+public class InvMsg extends Msg {
 
   private ImmutableSet<InvItem> invItems;
 
@@ -23,7 +23,7 @@ public class InvMessage extends Message {
     return "inv";
   }
 
-  public InvMessage(ImmutableSet<InvItem> invItems) {
+  public InvMsg(ImmutableSet<InvItem> invItems) {
     this.invItems = invItems;
   }
 
@@ -36,14 +36,14 @@ public class InvMessage extends Message {
     return out.toByteArray();
   }
 
-  public static InvMessage deserializePayload(BitcoinInputStream in) throws IOException {
+  public static InvMsg deserializePayload(BitcoinInputStream in) throws IOException {
     BigInteger count = in.readUnsignedVarInt();
     if (count.compareTo(MAX_INV_ITEMS) > 0)
       throw new TooMany("Peer sent " + count + " > " + MAX_INV_ITEMS + " inv items");
     ImmutableSet.Builder<InvItem> builder = new ImmutableSet.Builder<InvItem>();
     for (long i = 0; i < count.longValue(); i++)
       builder.add(InvItem.deserialize(in));
-    return new InvMessage(builder.build());
+    return new InvMsg(builder.build());
   }
 
   @Override
@@ -67,7 +67,7 @@ public class InvMessage extends Message {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    InvMessage that = (InvMessage) o;
+    InvMsg that = (InvMsg) o;
     return Objects.equals(this.invItems, that.invItems);
   }
 

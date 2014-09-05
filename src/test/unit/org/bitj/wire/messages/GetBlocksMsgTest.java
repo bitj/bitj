@@ -11,7 +11,7 @@ import java.io.IOException;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-public class GetBlocksMessageTest extends BaseTest {
+public class GetBlocksMsgTest extends BaseTest {
 
   static Sha256Hash HASH_GENESIS = new Sha256Hash("0000000000000000000000000000000000000000000000000000000000000000");
   static Sha256Hash HASH1 =        new Sha256Hash("0000000000000000000000000000000000000000000000000000000000000001");
@@ -20,7 +20,7 @@ public class GetBlocksMessageTest extends BaseTest {
   static Sha256Hash HASH4 =        new Sha256Hash("0000000000000000000000000000000000000000000000000000000000000004");
   static Sha256Hash HASH_STOP =    new Sha256Hash("1111111111111111111111111111111111111111111111111111111111111111");
 
-  static GetBlocksMessage MESSAGE1 = new GetBlocksMessage(
+  static GetBlocksMsg MESSAGE1 = new GetBlocksMsg(
     31900,
     ImmutableList.of(HASH2, HASH1, HASH_GENESIS),
     HASH_STOP
@@ -45,28 +45,28 @@ public class GetBlocksMessageTest extends BaseTest {
   @Test
   public void deserializePayload() throws IOException {
     BitcoinInputStream in = bitcoinStream(PAYLOAD1_BYTES);
-    assertEquals(GetBlocksMessage.deserializePayload(in), MESSAGE1);
+    assertEquals(GetBlocksMsg.deserializePayload(in), MESSAGE1);
   }
 
-  @Test(expectedExceptions = GetBlocksMessage.TooMany.class)
+  @Test(expectedExceptions = GetBlocksMsg.TooMany.class)
   public void deserializePayload_WhenTooManyHashes() throws IOException {
     byte[] maliciousPayload = new byte[PAYLOAD1_BYTES.length];
     System.arraycopy(PAYLOAD1_BYTES, 0, maliciousPayload, 0, PAYLOAD1_BYTES.length);
     // Set number of hashes to 38 (one more than allowed)
     maliciousPayload[4] = (byte) 38;
-    GetBlocksMessage.deserializePayload(bitcoinStream(maliciousPayload));
+    GetBlocksMsg.deserializePayload(bitcoinStream(maliciousPayload));
   }
 
   @Test
   public void serdeserConsistency() throws IOException {
-    GetBlocksMessage msg = new GetBlocksMessage(ImmutableList.of(HASH4, HASH3, HASH2, HASH1, HASH_GENESIS));
-    GetBlocksMessage deserializedMsg = GetBlocksMessage.deserializePayload(bitcoinStream(msg.serializePayload()));
+    GetBlocksMsg msg = new GetBlocksMsg(ImmutableList.of(HASH4, HASH3, HASH2, HASH1, HASH_GENESIS));
+    GetBlocksMsg deserializedMsg = GetBlocksMsg.deserializePayload(bitcoinStream(msg.serializePayload()));
     assertEquals(deserializedMsg, msg);
   }
 
   @Test
   public void toStringImplemented() throws Exception {
-    assertTrue(MESSAGE1.toString().contains("GetBlocksMessage{"));
+    assertTrue(MESSAGE1.toString().contains("GetBlocksMsg{"));
   }
 
 }

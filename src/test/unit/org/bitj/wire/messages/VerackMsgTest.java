@@ -8,31 +8,31 @@ import java.io.IOException;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-public class VerackMessageTest extends BaseTest {
+public class VerackMsgTest extends BaseTest {
 
   @Test
   public void serializePayload() throws Exception {
-    assertEquals(VerackMessage.getInstance().serializePayload(), bytes());
+    assertEquals(VerackMsg.getInstance().serializePayload(), bytes());
   }
 
   @Test
   public void deserializePayload() throws IOException {
-    assertEquals(VerackMessage.deserializePayload(bitcoinStream()), VerackMessage.getInstance());
+    assertEquals(VerackMsg.deserializePayload(bitcoinStream()), VerackMsg.getInstance());
   }
 
   @Test
   public void equals() throws Exception {
-    assertEquals(VerackMessage.getInstance(), VerackMessage.getInstance());
+    assertEquals(VerackMsg.getInstance(), VerackMsg.getInstance());
   }
 
   @Test
   public void hashcode() throws Exception {
-    assertEquals(VerackMessage.getInstance().hashCode(), VerackMessage.getInstance().hashCode());
+    assertEquals(VerackMsg.getInstance().hashCode(), VerackMsg.getInstance().hashCode());
   }
 
   @Test
   public void toStringImplemented() throws Exception {
-    assertTrue(VerackMessage.getInstance().toString().contains("VerackMessage{"));
+    assertTrue(VerackMsg.getInstance().toString().contains("VerackMsg{"));
   }
 
 }

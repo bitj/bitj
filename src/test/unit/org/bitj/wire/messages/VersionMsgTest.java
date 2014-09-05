@@ -11,11 +11,11 @@ import java.net.ProtocolException;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-public class VersionMessageTest extends BaseTest {
+public class VersionMsgTest extends BaseTest {
 
   // Example from https://en.bitcoin.it/wiki/Protocol_specification#version
 
-  static VersionMessage MESSAGE1 = new VersionMessage.Builder()
+  static VersionMsg MESSAGE1 = new VersionMsg.Builder()
     .version(31900)
     .services(1)                  // NODE_NETWORK
     .timestamp(1292899814)        // Mon Dec 20 21:50:14 EST 2010
@@ -37,7 +37,7 @@ public class VersionMessageTest extends BaseTest {
 
   // Second example from https://en.bitcoin.it/wiki/Protocol_specification#version
 
-  static VersionMessage MESSAGE2 = new VersionMessage.Builder()
+  static VersionMsg MESSAGE2 = new VersionMsg.Builder()
     .version(60002)
     .services(1)                  // NODE_NETWORK
     .timestamp(1355854353)        // Mon Dec 20 21:50:14 EST 2010
@@ -65,13 +65,13 @@ public class VersionMessageTest extends BaseTest {
 
   @Test
   public void deserializePayload_WikiExamples() throws IOException {
-    assertEquals(VersionMessage.deserializePayload(bitcoinStream(PAYLOAD1_BYTES)), MESSAGE1);
-    assertEquals(VersionMessage.deserializePayload(bitcoinStream(PAYLOAD2_BYTES)), MESSAGE2);
+    assertEquals(VersionMsg.deserializePayload(bitcoinStream(PAYLOAD1_BYTES)), MESSAGE1);
+    assertEquals(VersionMsg.deserializePayload(bitcoinStream(PAYLOAD2_BYTES)), MESSAGE2);
   }
 
-  @Test(expectedExceptions = VersionMessage.Incompatible.class)
+  @Test(expectedExceptions = VersionMsg.Incompatible.class)
   public void deserializePayload_WhenProtocolVersionIsTooLow() throws IOException {
-    VersionMessage.deserializePayload(bitcoinStream(0x9B, 0x7C, 0, 0));  // 31899
+    VersionMsg.deserializePayload(bitcoinStream(0x9B, 0x7C, 0, 0));  // 31899
   }
 
   @Test(expectedExceptions = ProtocolException.class)
@@ -84,21 +84,21 @@ public class VersionMessageTest extends BaseTest {
     maliciousPayload[82] = (byte) 255;
     maliciousPayload[83] = (byte) 255;
     maliciousPayload[84] = 127;
-    VersionMessage.deserializePayload(bitcoinStream(maliciousPayload));
+    VersionMsg.deserializePayload(bitcoinStream(maliciousPayload));
   }
 
   @Test
   public void serdeserConsistency() throws Exception {
-    VersionMessage version = new VersionMessage.Builder().get();
+    VersionMsg version = new VersionMsg.Builder().get();
     byte[] bytes = version.serializePayload();
     BitcoinInputStream in = new BitcoinInputStream(new ByteArrayInputStream(bytes));
-    VersionMessage deserialized = VersionMessage.deserializePayload(in);
+    VersionMsg deserialized = VersionMsg.deserializePayload(in);
     assertEquals(version, deserialized);
   }
 
   @Test
   public void toStringImplemented() throws Exception {
-    assertTrue(MESSAGE1.toString().contains("VersionMessage{"));
+    assertTrue(MESSAGE1.toString().contains("VersionMsg{"));
   }
 
 }
