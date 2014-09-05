@@ -40,6 +40,10 @@ public class Blockchain {
     chain.add(block);
   }
 
+  public void append(List<Block> blocks) {
+    chain.addAll(blocks);
+  }
+
   public ImmutableList<Sha256Hash> getDefaultBlockLocator() {
     return getBlockLocator(10);
   }

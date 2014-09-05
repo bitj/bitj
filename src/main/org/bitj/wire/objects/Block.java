@@ -8,7 +8,6 @@ import org.bitj.utils.Utils;
 import org.bitj.wire.BitcoinInputStream;
 import org.bitj.wire.BitcoinOutputStream;
 import org.bitj.wire.Wire;
-import org.bitj.wire.messages.VersionMessage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,7 +26,9 @@ public class Block {
    */
   public static final int HEADER_SIZE_IN_BYTES = 4 + 32 + 32 + 4 + 4 + 4;
 
-  private long version = VersionMessage.PROTOCOL_VERSION;
+  public static final int SUPPORTED_VERSION = 2;
+
+  private long version = SUPPORTED_VERSION;
   private Sha256Hash prevHash;
   private Sha256Hash mrklRoot;
   private long timestamp = Utils.currentUnixTimestamp();
@@ -36,7 +37,6 @@ public class Block {
   private ImmutableList<Tx> txns = new ImmutableList.Builder<Tx>().build();
 
   private Sha256Hash hash;
-  public byte[] mrklTree;  // consecutive 32-byte hashes
 
   private Block() {}
 
@@ -50,7 +50,7 @@ public class Block {
     return out.toByteArray();
   }
 
-  private void serializeHeader(BitcoinOutputStream out) throws IOException {
+  public void serializeHeader(BitcoinOutputStream out) throws IOException {
     out.writeUnsignedInt32LE(version);
     out.writeSha256HashLE(prevHash);
     out.writeSha256HashLE(mrklRoot);

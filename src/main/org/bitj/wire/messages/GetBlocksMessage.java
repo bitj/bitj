@@ -18,9 +18,9 @@ public class GetBlocksMessage extends Message {
   // 10 consecutive blocks + log(2, 1024 years * 365 days * 24 hours * 6 blocks) + genesis block
   public static final int MAX_LOCATOR_OBJECT_SIZE = 10 + 26 + 1;
 
-  private long version = VersionMessage.PROTOCOL_VERSION;
-  private ImmutableList<Sha256Hash> blockLocator;
-  private Sha256Hash stopHash = Sha256Hash.ZERO;
+  protected long version = VersionMessage.PROTOCOL_VERSION;
+  protected ImmutableList<Sha256Hash> blockLocator;
+  protected Sha256Hash stopHash = Sha256Hash.ZERO;
 
   @Override
   public String name() {

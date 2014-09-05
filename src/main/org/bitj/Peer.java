@@ -97,7 +97,8 @@ public class Peer {
 
   private void handle(Object job) throws IOException {
     if (job instanceof String && job.equals(DOWNLOAD_BLOCKCHAIN)) {
-      new BlockchainDownloader(in, out).start();
+      //new BlockchainDownloader(in, out).start();
+      new HeadersDownloader(in, out).start();
     }
   }
 

@@ -78,6 +78,10 @@ public abstract class Message {
       return TxMessage.deserializePayload(in);
     if (messageName.equals("block"))
       return BlockMessage.deserializePayload(in);
+    if (messageName.equals("getheaders"))
+      return GetHeadersMessage.deserializePayload(in);
+    if (messageName.equals("headers"))
+      return HeadersMessage.deserializePayload(in);
     throw new Unrecognized("Unknown message name " + messageName);  // TODO: introduce ProtocolException
   }
 
