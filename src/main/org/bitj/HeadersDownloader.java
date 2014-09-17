@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * THIS IS A THROW-AWAY HACK USED TO EDUCATE MYSELF ABOUT BASICS OF THE INITIAL BLOCKCHAIN DOWNLOAD
@@ -16,13 +17,15 @@ public class HeadersDownloader {
   private InputStream in;
   private OutputStream out;
 
+  private Logger logger = Logger.getLogger("org.bitj.eventlogger");
+
   public HeadersDownloader(InputStream in, OutputStream out) {
     this.in = in;
     this.out = out;
   }
 
   public void start() throws IOException {
-    System.out.println("Downloading block headers...");
+    logger.info("Downloading block headers...");
     Blockchain blockchain = App.getInstance().getBlockchain();
     Msg msg;
 
@@ -33,7 +36,6 @@ public class HeadersDownloader {
 
       // Send getheaders to get the next batch of block headers
       GetHeadersMsg getHeaders = new GetHeadersMsg(blockchain.getDefaultBlockLocator());
-      //System.out.println("Sending: " + getHeaders);
       getHeaders.serialize(out);
 
       // Expect the headers message containing 2000 block headers (except the last iteration)
@@ -44,7 +46,7 @@ public class HeadersDownloader {
           List<Block> blocks = headersMsg.getBlocks();
           blockchain.append(blocks);
           currentHeight = blockchain.getHeight();
-          System.out.println("Blockchain height: " + currentHeight);
+          logger.fine("Blockchain height: " + currentHeight);
         } else {
           ignore(msg);
         }
@@ -55,7 +57,7 @@ public class HeadersDownloader {
   }
 
   private void ignore(Msg msg) {
-    System.out.println("Ignoring: " + msg);
+    logger.finer("Ignoring " + msg.name());
   }
 
 }

@@ -1,16 +1,24 @@
 package org.bitj;
 
+import org.bitj.logging.LoggersRegistrar;
 import org.bitj.utils.Debug;
 import org.bitj.wire.BitcoinInputStream;
 import org.bitj.wire.Wire;
 import org.bitj.wire.messages.Msg;
+import org.testng.annotations.BeforeSuite;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
 
 public class BaseTest {
+
+  @BeforeSuite
+  public void registerLoggers() throws Exception {
+    LoggersRegistrar.registerEventLogger(Level.FINEST);
+  }
 
   public static byte[] bytes(int... iBytes) {
     byte[] bBytes = new byte[iBytes.length];

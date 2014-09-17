@@ -11,12 +11,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ProtocolException;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class Msg {
 
   private static final byte[] MAGIC_BYTES = new byte[] { (byte) 0xF9, (byte) 0xBE, (byte) 0xB4, (byte) 0xD9 };
   public static final int MAX_STRING_LENGTH = 4 * 1024; // 4 KB
   private static final int MAX_MESSAGE_SIZE = 32 * 1014 * 1024; // 32 MB
+
+  private static Logger logger;
 
   public void serialize(OutputStream os) throws IOException {
     BitcoinOutputStream out = new BitcoinOutputStream(os);
@@ -27,6 +31,7 @@ public abstract class Msg {
     out.write(Crypto.bitcoinChecksum(payload));
     out.write(payload);
     out.flush();
+    logDid(this, "Send");
   }
 
   public static Msg deserialize(InputStream is) throws IOException {
@@ -45,7 +50,9 @@ public abstract class Msg {
     throwIfChecksumIsInvalid(payload, expectedChecksum);
 
     BitcoinInputStream payloadIn = new BitcoinInputStream(new ByteArrayInputStream(payload));
-    return deserializePayload(payloadIn, messageName);
+    Msg msg = deserializePayload(payloadIn, messageName);
+    logDid(msg, "Recv");
+    return msg;
   }
 
   private static void throwIfTooLarge(long length) throws ProtocolException {
@@ -85,9 +92,22 @@ public abstract class Msg {
     throw new Unrecognized("Unknown message name " + messageName);  // TODO: introduce ProtocolException
   }
 
-  protected abstract String name();
+  public abstract String name();
 
   protected abstract byte[] serializePayload() throws IOException;
+
+  private static void logDid(Msg msg, String deed) {
+    if (logger().getLevel().intValue() >= Level.FINE.intValue())
+      logger().fine(deed + ": " + msg.name());
+    else
+      logger().finer(deed + ": " + msg);
+  }
+
+  private static Logger logger() {
+    if (logger == null)
+      logger = Logger.getLogger("org.bitj.eventlogger");
+    return logger;
+  }
 
   public static class InvalidChecksum extends ProtocolException {
     public InvalidChecksum(String msg) { super(msg); }

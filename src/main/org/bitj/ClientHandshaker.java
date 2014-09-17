@@ -30,7 +30,6 @@ public class ClientHandshaker {
 
   private void sendVersion() throws IOException {
     VersionMsg myVersion = new VersionMsg.Builder().get();
-    System.out.println("Sending: " + myVersion);
     myVersion.serialize(out);
   }
 
@@ -39,12 +38,10 @@ public class ClientHandshaker {
     if (!(msg instanceof VersionMsg))
       throw new ProtocolException("Expected VersionMsg, got " + msg.toString());
     version = (VersionMsg) msg;
-    System.out.println("Received: " + version);
   }
 
   private void sendVerack() throws IOException {
     VerackMsg verack = VerackMsg.getInstance();
-    System.out.println("Sending: " + verack);
     verack.serialize(out);
   }
 
@@ -52,7 +49,6 @@ public class ClientHandshaker {
     Msg msg = Msg.deserialize(in);
     if (!(msg instanceof VerackMsg))
       throw new ProtocolException("Expected VerackMsg, got " + msg.toString());
-    System.out.println("Received: " + msg);
   }
 
 }

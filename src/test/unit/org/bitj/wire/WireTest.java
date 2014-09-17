@@ -193,7 +193,6 @@ public class WireTest extends BaseTest {
 
   @Test
   public void unsIntVarSizeInBytes() throws Exception {
-    System.out.println(Debug.bytesToHex(Wire.unsIntToVarBytes(556)));
     assertEquals( Wire.unsIntVarSizeInBytes(0), 1 );
     assertEquals( Wire.unsIntVarSizeInBytes(252), 1 );
     assertEquals( Wire.unsIntVarSizeInBytes(253), 3 );

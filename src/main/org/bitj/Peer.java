@@ -17,8 +17,6 @@ public class Peer {
 
   private static final long SLEEP_TIME = 100;
 
-  private static Logger log = Logger.getLogger(Peer.class.getName());
-
   private InetSocketAddress socketAddress;
   private Socket socket;
   private InputStream in;
@@ -29,6 +27,8 @@ public class Peer {
   private Queue<String> jobs = new ConcurrentLinkedQueue<>();
 
   private ClientState state = ClientState.NEUTRAL;
+
+  private Logger logger = Logger.getLogger("org.bitj.eventlogger");
 
   public Peer(InetAddress address, int port) throws SocketException {
     socketAddress = new InetSocketAddress(address, port);
@@ -103,7 +103,7 @@ public class Peer {
   }
 
   private void ignore(Msg msg) {
-    System.out.println("Ignoring: " + msg.toString());
+    logger.finer("Ignoring " + msg.name());
   }
 
   public void queueJobDownloadBlockchain() {
@@ -112,30 +112,26 @@ public class Peer {
 
   private void handle(InvMsg inv) throws IOException {
     GetDataMsg getdata = new GetDataMsg(inv.getInvItems());
-    System.out.println("Sending: " + getdata);
     getdata.serialize(out);
   }
 
   private void handle(BlockMsg blockMsg) throws IOException {
-    System.out.println(blockMsg.getBlock().getNonce());
   }
 
   private void sendGetAddr() throws IOException {
     GetAddrMsg msg = GetAddrMsg.getInstance();
-    System.out.println("Sending: " + msg);
     msg.serialize(out);
   }
 
   private void receiveAddr() throws IOException {
     AddrMsg msg = (AddrMsg) Msg.deserialize(in);
-    System.out.println(msg);
   }
 
   private void closeSocket() {
     try {
       socket.close();
     } catch (IOException e) {
-      log.warning("Socket closed unclean: " + e.getMessage());
+      logger.warning("Socket closed uncleanly: " + e.getMessage());
     }
   }
 

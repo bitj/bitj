@@ -6,6 +6,7 @@ import org.bitj.wire.objects.InvItem;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.logging.Logger;
 
 /**
  * THIS IS A THROW-AWAY HACK USED TO EDUCATE MYSELF ABOUT BASICS OF THE INITIAL BLOCKCHAIN DOWNLOAD
@@ -15,13 +16,15 @@ public class BlockchainDownloader {
   private InputStream in;
   private OutputStream out;
 
+  private Logger logger = Logger.getLogger("org.bitj.eventlogger");
+
   public BlockchainDownloader(InputStream in, OutputStream out) {
     this.in = in;
     this.out = out;
   }
 
   public void start() throws IOException {
-    System.out.println("Downloading blockchain...");
+    logger.info("Downloading blockchain...");
     Blockchain blockchain = App.getInstance().getBlockchain();
     Msg msg = null;
     InvMsg invMsg = null;
@@ -30,7 +33,6 @@ public class BlockchainDownloader {
 
       // Send getblocks to get next part of the inventory
       GetBlocksMsg getblocks = new GetBlocksMsg(blockchain.getDefaultBlockLocator());
-      System.out.println("Sending: " + getblocks);
       getblocks.serialize(out);
 
       // Wait for the block inv
@@ -46,7 +48,7 @@ public class BlockchainDownloader {
           blockMsg = (BlockMsg) msg;
           blockchain.append(blockMsg.getBlock());
           received += 1;
-          System.out.println("Received: block " + (blockchain.getHeight()-1) + " / " + blockMsg.getBlock());
+          logger.info("Received  block " + (blockchain.getHeight()-1) + " / " + blockMsg.getBlock());
           if (received == expected)
             break;
         } else {
@@ -62,7 +64,7 @@ public class BlockchainDownloader {
         msg = Msg.deserialize(in);
         if (msg instanceof BlockMsg) {
           blockMsg = (BlockMsg) msg;
-          System.out.println("Received: latest block / " + blockMsg.getBlock());
+          logger.info("Received latest block / " + blockMsg.getBlock());
           break;
         } else {
           ignore(msg);
@@ -81,9 +83,7 @@ public class BlockchainDownloader {
       if (msg instanceof InvMsg) {
         invMsg = (InvMsg) msg;
         if (invMsg.getInvItems().asList().get(0).type.equals(InvItem.Type.Block)) {
-          System.out.println("Received: " + invMsg);
           GetDataMsg getdata = new GetDataMsg(invMsg.getInvItems());
-          System.out.println("Sending: " + getdata);
           getdata.serialize(out);
           return invMsg;
         } else {
@@ -96,7 +96,7 @@ public class BlockchainDownloader {
   }
 
   private void ignore(Msg msg) {
-    System.out.println("Ignoring: " + msg);
+    logger.finer("Ignoring " + msg);
   }
 
 }
