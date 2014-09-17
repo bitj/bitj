@@ -32,7 +32,7 @@ public class Block {
   private Sha256Hash prevHash;
   private Sha256Hash mrklRoot;
   private long timestamp = Utils.currentUnixTimestamp();
-  private long bits = -1;
+  private long compactTarget = -1;
   private long nonce = -1;
   private ImmutableList<Tx> txns = new ImmutableList.Builder<Tx>().build();
 
@@ -55,7 +55,7 @@ public class Block {
     out.writeSha256HashLE(prevHash);
     out.writeSha256HashLE(mrklRoot);
     out.writeUnsInt32LE(timestamp);
-    out.writeUnsInt32LE(bits);
+    out.writeUnsInt32LE(compactTarget);
     out.writeUnsInt32LE(nonce);
   }
 
@@ -64,7 +64,7 @@ public class Block {
     Sha256Hash prevHash = in.readSha256Hash();
     Sha256Hash mrklRoot = in.readSha256Hash();
     long timestamp = in.readUnsInt32LE();
-    long bits = in.readUnsInt32LE();
+    long compactTarget = in.readUnsInt32LE();
     long nonce = in.readUnsInt32LE();
     BigInteger numberOfTx = in.readUnsVarInt();
     long size = HEADER_SIZE_IN_BYTES + Wire.unsIntVarSizeInBytes(numberOfTx.longValue()); // about 81 or 83, theoretically up to 85
@@ -81,7 +81,7 @@ public class Block {
       prevHash(prevHash).
       mrklRoot(mrklRoot).
       timestamp(timestamp).
-      bits(bits).
+      compactTarget(compactTarget).
       nonce(nonce).
       txns(txns.build()).
       get();
@@ -95,7 +95,7 @@ public class Block {
 
   public long getTimestamp() { return timestamp; }
 
-  public long getBits() { return bits; }
+  public long getCompactTarget() { return compactTarget; }
 
   public long getNonce() { return nonce; }
 
@@ -146,7 +146,7 @@ public class Block {
       .add("prevHash", prevHash)
       .add("mrklRoot", mrklRoot)
       .add("timestamp", timestamp)
-      .add("bits", bits)
+      .add("compactTarget", compactTarget)
       .add("nonce", nonce)
       .add("txns", txns)
       .add("hash", getHash())
@@ -159,7 +159,7 @@ public class Block {
     public Builder() {}
 
     public Block get() {
-      if (block.prevHash == null || block.mrklRoot == null || block.bits == -1 || block.nonce == -1)
+      if (block.prevHash == null || block.mrklRoot == null || block.compactTarget == -1 || block.nonce == -1)
         throw new IllegalArgumentException("Set all obligatory attributes");
       return block;
     }
@@ -168,7 +168,7 @@ public class Block {
     public Builder prevHash(Sha256Hash prevHash) { block.prevHash = prevHash; return this; }
     public Builder mrklRoot(Sha256Hash mrklRoot) { block.mrklRoot = mrklRoot; return this; }
     public Builder timestamp(long timestamp) { block.timestamp = timestamp; return this; }
-    public Builder bits(long bits) { block.bits = bits; return this; }
+    public Builder compactTarget(long bits) { block.compactTarget = bits; return this; }
     public Builder nonce(long nonce) { block.nonce = nonce; return this; }
     public Builder txns(ImmutableList<Tx> txns) { block.txns = txns; return this; }
     public Builder hash(Sha256Hash hash) { block.hash = hash; return this; }

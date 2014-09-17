@@ -27,7 +27,7 @@ public class H2Gateway implements Gateway {
         prevHash(new Sha256Hash(resultSet.getBytes("prev_hash"))).
         mrklRoot(new Sha256Hash(resultSet.getBytes("mrkl_root"))).
         timestamp(resultSet.getTimestamp("timestamp").getTime() / 1000).
-        bits(resultSet.getLong("bits")).
+        compactTarget(resultSet.getLong("compact_target")).
         nonce(resultSet.getLong("nonce")).
         get();
       blocks.add(block);

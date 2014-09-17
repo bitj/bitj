@@ -38,7 +38,7 @@ public class BlockchainTest extends BaseTest {
   }
 
   private Block blockWith(Sha256Hash hash) {
-    return new Block.Builder().hash(hash).prevHash(Sha256Hash.ZERO).mrklRoot(Sha256Hash.ZERO).bits(0).nonce(0).get();
+    return new Block.Builder().hash(hash).prevHash(Sha256Hash.ZERO).mrklRoot(Sha256Hash.ZERO).compactTarget(0).nonce(0).get();
   }
 
 }

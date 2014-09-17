@@ -5,7 +5,7 @@ INSERT INTO blocks (
   prev_hash,
   mrkl_root,
   timestamp,
-  bits,
+  compact_target,
   nonce,
   mrkl_tree
 ) VALUES (
@@ -13,7 +13,7 @@ INSERT INTO blocks (
   X'0000000000000000000000000000000000000000000000000000000000000000',
   X'4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b',
   DATEADD('SECOND', 1231006505, DATE '1970-01-01'),
-  4294901789,  // ffff001d bits
+  4294901789,  // ffff001d compactTarget
   2083236893,
   X'4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b',
 );

@@ -1,21 +1,14 @@
 package org.bitj.wire.objects;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.io.ByteStreams;
-import com.google.common.primitives.Bytes;
 import org.bitj.BaseTest;
 import org.bitj.Sha256Hash;
 import org.bitj.utils.JarFileLoader;
 import org.bitj.wire.BitcoinInputStream;
 import org.bitj.wire.Wire;
-import org.h2.store.fs.FilePath;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.net.ProtocolException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -56,7 +49,7 @@ public class BlockTest extends BaseTest {
       prevHash(Sha256Hash.ZERO).
       mrklRoot(Sha256Hash.ONE).
       timestamp(Wire.MAX_UINT_32).
-      bits(Wire.MAX_UINT_32 - 1).
+      compactTarget(Wire.MAX_UINT_32 - 1).
       nonce(Wire.MAX_UINT_32 - 2).
       get();
     byte[] serialized = empty.serialize();
@@ -65,7 +58,7 @@ public class BlockTest extends BaseTest {
       "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00" + // prevHash
       "FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF" + // mrklRoot
       "FF FF FF FF" +  // timestamp
-      "FE FF FF FF" +  // bits
+      "FE FF FF FF" +  // compactTarget
       "FD FF FF FF" +  // nonce
       "00" // no transactions (this is illegal but serialization itself supports this)
     ));
@@ -80,7 +73,7 @@ public class BlockTest extends BaseTest {
       prevHash(Sha256Hash.ZERO).
       mrklRoot(new Sha256Hash(reversedBytes("3BA3EDFD7A7B12B27AC72C3E67768F617FC81BC3888A51323A9FB8AA4B1E5E4A"))).
       timestamp(1231006505L).  // 2009-01-03 19:15:05 +0100 | 29AB5F49 LE
-      bits(486604799L).        // FFFF001D LE -> 1D00FFFF BE
+      compactTarget(486604799L).        // FFFF001D LE -> 1D00FFFF BE
       nonce(2083236893L).      // 1DAC2B7C LE -> 7C2BAc1D BE
       txns(txns).
       get();
@@ -116,7 +109,7 @@ public class BlockTest extends BaseTest {
     assertEquals(genesis.getPrevHash(), Sha256Hash.ZERO);
     assertEquals(genesis.getMrklRoot(), new Sha256Hash(reversedBytes("3BA3EDFD7A7B12B27AC72C3E67768F617FC81BC3888A51323A9FB8AA4B1E5E4A")));
     assertEquals(genesis.getTimestamp(), 1231006505L); // 2009-01-03 19:15:05 +0100 | 29AB5F49 LE
-    assertEquals(genesis.getBits(), 486604799L);       // FFFF001D LE -> 1D00FFFF BE
+    assertEquals(genesis.getCompactTarget(), 486604799L);       // FFFF001D LE -> 1D00FFFF BE
     assertEquals(genesis.getNonce(), 2083236893L);     // 1DAC2B7C LE -> 7C2BAc1D BE
     ImmutableList<Tx> txns = genesis.getTxns();
     assertEquals(txns.size(), 1);
@@ -149,7 +142,7 @@ public class BlockTest extends BaseTest {
   }
 
   private Block newEmptyBlock() {
-    return new Block.Builder().prevHash(Sha256Hash.ZERO).mrklRoot(Sha256Hash.ZERO).bits(0).nonce(0).get();
+    return new Block.Builder().prevHash(Sha256Hash.ZERO).mrklRoot(Sha256Hash.ZERO).compactTarget(0).nonce(0).get();
   }
 
 }
