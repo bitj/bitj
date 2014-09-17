@@ -11,6 +11,7 @@ import org.bitj.wire.Wire;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.ProtocolException;
 
@@ -124,6 +125,14 @@ public class Block {
     return HEADER_SIZE_IN_BYTES +
       Wire.unsIntVarSizeInBytes(txns.size()) +
       txns.stream().mapToLong(Tx::getSizeInBytes).sum();
+  }
+
+  public BigDecimal getDifficulty() {
+    return Utils.getDifficulty(compactTarget);
+  }
+
+  public BigInteger getTarget() {
+    return Utils.getTarget(compactTarget);
   }
 
   @Override
