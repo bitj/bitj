@@ -8,6 +8,7 @@ import org.bitj.utils.Utils;
 import org.bitj.wire.BitcoinInputStream;
 import org.bitj.wire.BitcoinOutputStream;
 import org.bitj.wire.Wire;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class Block {
 
   public static final int SUPPORTED_VERSION = 2;
 
+  // serialized
   private long version = SUPPORTED_VERSION;
   private Sha256Hash prevHash;
   private Sha256Hash mrklRoot;
@@ -37,7 +39,7 @@ public class Block {
   private long nonce = -1;
   private ImmutableList<Tx> txns = new ImmutableList.Builder<Tx>().build();
 
-  private Sha256Hash hash;
+  private Sha256Hash cachedHash;
 
   private Block() {}
 
@@ -94,7 +96,7 @@ public class Block {
 
   public Sha256Hash getMrklRoot() { return mrklRoot; }
 
-  public long getTimestamp() { return timestamp; }
+  public long getUnixTimestamp() { return timestamp; }
 
   public long getCompactTarget() { return compactTarget; }
 
@@ -103,7 +105,8 @@ public class Block {
   public ImmutableList<Tx> getTxns() { return txns; }
 
   public Sha256Hash getHash() {
-    if (hash == null) {
+    // TODO: check if can be done better
+    if (cachedHash == null) {
       BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(HEADER_SIZE_IN_BYTES));
       try {
         serializeHeader(out);
@@ -113,9 +116,9 @@ public class Block {
       byte[] serializedHeader = out.toByteArray();
       byte[] hashBytes = Crypto.bitcoinHash(serializedHeader);
       Wire.reverseBytesInPlace(hashBytes);
-      hash = new Sha256Hash(hashBytes);
+      cachedHash = new Sha256Hash(hashBytes);
     }
-    return hash;
+    return cachedHash;
   }
 
   /**
@@ -137,15 +140,12 @@ public class Block {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    Block that = (Block) o;
-    return Objects.equal(this.getHash(), that.getHash());
+    throw new NotImplementedException();
   }
 
   @Override
   public int hashCode() {
-    return hash.hashCode();
+    throw new NotImplementedException();
   }
 
   @Override
@@ -158,7 +158,7 @@ public class Block {
       .add("compactTarget", compactTarget)
       .add("nonce", nonce)
       .add("txns", txns)
-      .add("hash", getHash())
+      .add("cachedHash", getHash())
       .toString();
   }
 
@@ -180,7 +180,7 @@ public class Block {
     public Builder compactTarget(long bits) { block.compactTarget = bits; return this; }
     public Builder nonce(long nonce) { block.nonce = nonce; return this; }
     public Builder txns(ImmutableList<Tx> txns) { block.txns = txns; return this; }
-    public Builder hash(Sha256Hash hash) { block.hash = hash; return this; }
+    public Builder hash(Sha256Hash hash) { block.cachedHash = hash; return this; }
   }
 
 }

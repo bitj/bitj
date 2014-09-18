@@ -108,9 +108,9 @@ public class BlockTest extends BaseTest {
     assertEquals(genesis.getVersion(), 1);
     assertEquals(genesis.getPrevHash(), Sha256Hash.ZERO);
     assertEquals(genesis.getMrklRoot(), new Sha256Hash(reversedBytes("3BA3EDFD7A7B12B27AC72C3E67768F617FC81BC3888A51323A9FB8AA4B1E5E4A")));
-    assertEquals(genesis.getTimestamp(), 1231006505L); // 2009-01-03 19:15:05 +0100 | 29AB5F49 LE
-    assertEquals(genesis.getCompactTarget(), 486604799L);       // FFFF001D LE -> 1D00FFFF BE
-    assertEquals(genesis.getNonce(), 2083236893L);     // 1DAC2B7C LE -> 7C2BAc1D BE
+    assertEquals(genesis.getUnixTimestamp(), 1231006505L); // 2009-01-03 19:15:05 +0100 | 29AB5F49 LE
+    assertEquals(genesis.getCompactTarget(), 486604799L);  // FFFF001D LE -> 1D00FFFF BE
+    assertEquals(genesis.getNonce(), 2083236893L);         // 1DAC2B7C LE -> 7C2BAc1D BE
     ImmutableList<Tx> txns = genesis.getTxns();
     assertEquals(txns.size(), 1);
     Tx genesisCoinbaseTx = Tx.deserialize(bitcoinStream(SERIALIZED_GENESIS_COINBASE_TX));
