@@ -1,20 +1,20 @@
 package org.bitj.wire.objects;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
+import static com.google.common.base.Objects.toStringHelper;
 import org.bitj.Sha256Hash;
 import org.bitj.utils.Crypto;
 import org.bitj.utils.Utils;
 import org.bitj.wire.BitcoinInputStream;
 import org.bitj.wire.BitcoinOutputStream;
 import org.bitj.wire.Wire;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.ProtocolException;
+import java.util.Objects;
 
 public class Block {
 
@@ -139,18 +139,8 @@ public class Block {
   }
 
   @Override
-  public boolean equals(Object o) {
-    throw new NotImplementedException();
-  }
-
-  @Override
-  public int hashCode() {
-    throw new NotImplementedException();
-  }
-
-  @Override
   public String toString() {
-    return Objects.toStringHelper(this)
+    return toStringHelper(this)
       .add("version", version)
       .add("prevHash", prevHash)
       .add("mrklRoot", mrklRoot)
@@ -160,6 +150,24 @@ public class Block {
       .add("txns", txns)
       .add("cachedHash", getHash())
       .toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Block that = (Block) o;
+    return Objects.equals(this.timestamp, that.timestamp) &&
+      Objects.equals(this.version, that.version) &&
+      Objects.equals(this.prevHash, that.prevHash) &&
+      Objects.equals(this.mrklRoot, that.mrklRoot) &&
+      Objects.equals(this.compactTarget, that.compactTarget) &&
+      Objects.equals(this.nonce, that.nonce);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(timestamp, version, prevHash, mrklRoot, compactTarget, nonce);
   }
 
   public static class Builder {
