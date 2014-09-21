@@ -155,8 +155,8 @@ public class TxTest extends BaseTest {
     assertEquals(tx.getInputs().get(0).getSequence(), Wire.MAX_UINT_32);
 
     assertEquals(tx.getOutputs().size(), 2);
-    assertEquals(tx.getOutputs().get(0).getValue(), 5000000L);
-    assertEquals(tx.getOutputs().get(1).getValue(), 3354000000L);
+    assertEquals(tx.getOutputs().get(0).getSatoshi(), 5000000L);
+    assertEquals(tx.getOutputs().get(1).getSatoshi(), 3354000000L);
 
     assertEquals(tx.getUnlockAfter(), 0);
   }
