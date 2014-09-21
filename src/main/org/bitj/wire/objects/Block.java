@@ -64,8 +64,8 @@ public class Block {
 
   public static Block deserialize(BitcoinInputStream in) throws IOException {
     long version = in.readUnsInt32LE();
-    Sha256Hash prevHash = in.readSha256Hash();
-    Sha256Hash mrklRoot = in.readSha256Hash();
+    Sha256Hash prevHash = in.readSha256HashLE();
+    Sha256Hash mrklRoot = in.readSha256HashLE();
     long timestamp = in.readUnsInt32LE();
     long compactTarget = in.readUnsInt32LE();
     long nonce = in.readUnsInt32LE();
@@ -105,7 +105,6 @@ public class Block {
   public ImmutableList<Tx> getTxns() { return txns; }
 
   public Sha256Hash getHash() {
-    // TODO: check if can be done better
     if (cachedHash == null) {
       BitcoinOutputStream out = new BitcoinOutputStream(new ByteArrayOutputStream(HEADER_SIZE_IN_BYTES));
       try {

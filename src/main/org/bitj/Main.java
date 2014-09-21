@@ -9,7 +9,7 @@ import java.util.logging.Level;
 public class Main {
 
   public static void main(String[] args) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
-    LoggersRegistrar.registerEventLogger(Level.FINE);
+    LoggersRegistrar.registerEventLogger(Level.FINER);
     App.getInstance().run();
     System.out.println("Main.main() end");
   }

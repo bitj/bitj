@@ -32,7 +32,7 @@ public class TxOutputPointer {
   }
 
   public static TxOutputPointer deserialize(BitcoinInputStream in) throws IOException {
-    Sha256Hash txHash = in.readSha256Hash();
+    Sha256Hash txHash = in.readSha256HashLE();
     long outputIndex = in.readUnsInt32LE();
     return new TxOutputPointer(txHash, outputIndex);
   }

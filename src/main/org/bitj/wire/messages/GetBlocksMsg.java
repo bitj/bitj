@@ -55,10 +55,10 @@ public class GetBlocksMsg extends Msg {
       throw new TooMany("Locator object claims to contain " + length + " > " + MAX_LOCATOR_OBJECT_SIZE + " block hashes");
     ImmutableList.Builder<Sha256Hash> blockLocator = new ImmutableList.Builder<>();
     for (long i = 0; i < length.longValue(); i++) {
-      Sha256Hash hash = in.readSha256Hash();
+      Sha256Hash hash = in.readSha256HashLE();
       blockLocator.add(hash);
     }
-    Sha256Hash stopHash = in.readSha256Hash();
+    Sha256Hash stopHash = in.readSha256HashLE();
     return new GetBlocksMsg(version, blockLocator.build(), stopHash);
   }
 

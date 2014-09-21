@@ -29,7 +29,7 @@ public class InvItem {
 
   public static InvItem deserialize(BitcoinInputStream in) throws IOException {
     Type type = Type.valueOf(in.readUnsInt32LE());
-    Sha256Hash hash = in.readSha256Hash();
+    Sha256Hash hash = in.readSha256HashLE();
     return new InvItem(type, hash);
   }
 

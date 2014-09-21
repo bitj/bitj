@@ -127,7 +127,7 @@ public class BitcoinInputStream extends FilterInputStream {
     return bytes;
   }
 
-  public Sha256Hash readSha256Hash() throws IOException {
+  public Sha256Hash readSha256HashLE() throws IOException {
     byte[] bts = readBytes(32);
     Wire.reverseBytesInPlace(bts);
     return new Sha256Hash(bts);

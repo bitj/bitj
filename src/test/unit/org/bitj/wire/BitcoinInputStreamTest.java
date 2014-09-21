@@ -275,12 +275,12 @@ public class BitcoinInputStreamTest extends BaseTest {
     assertEquals(in.readIP(), InetAddress.getByName("0000:0db8:0000::0000:ff00:0042:8329"));
   }
 
-  // readSha256Hash
+  // readSha256HashLE
 
   @Test
   public void readSha256Hash() throws Exception {
     BitcoinInputStream in = bitcoinStream("00000000000000001ad3eb4971697d07256b5c049bfcf80a1a2c6815bc9b3463FF");
-    assertEquals(in.readSha256Hash(), new Sha256Hash("63349bbc15682c1a0af8fc9b045c6b25077d697149ebd31a0000000000000000"));
+    assertEquals(in.readSha256HashLE(), new Sha256Hash("63349bbc15682c1a0af8fc9b045c6b25077d697149ebd31a0000000000000000"));
     assertEquals(in.read(), 255); // next byte after SHA is available
   }
 
