@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class TxOutput {
 
   private Amount amount;
@@ -17,13 +20,16 @@ public class TxOutput {
   public static final long MIN_SIZE = 9;
 
   public TxOutput(Amount amount, TxScript script) {
-    this.amount = amount;
-    this.script = script;
+    checkNotNull(amount);
+    checkArgument(amount.isLegalTxOutputValue());
+    this.amount = checkNotNull(amount);
+    this.script = checkNotNull(script);
   }
 
   public TxOutput(long satoshi, TxScript script) {
     this.amount = new Amount(satoshi);
-    this.script = script;
+    checkArgument(amount.isLegalTxOutputValue());
+    this.script = checkNotNull(script);
   }
 
   public byte[] serialize() throws IOException {
@@ -34,17 +40,15 @@ public class TxOutput {
   }
 
   public static TxOutput deserialize(BitcoinInputStream in) throws IOException {
-    long satoshi = in.readInt64LE();
-    throwIfIllegalValue(satoshi);
+    Amount amount = new Amount(in.readInt64LE());
+    throwIfIllegal(amount);
     TxScript script = TxScript.deserialize(in, TxScript.Type.OUTPUT);
-    return new TxOutput(new Amount(satoshi), script);
+    return new TxOutput(amount, script);
   }
 
-  private static void throwIfIllegalValue(long satoshi) throws ProtocolException {
-    if (satoshi < 0)
-      throw new ProtocolException("Illegal tx output amount " + satoshi + " < 0");
-    if (satoshi > Amount.MAX_SATOSHI)
-      throw new ProtocolException("Illegal tx output amount " + satoshi + " > " + Amount.MAX_SATOSHI);
+  private static void throwIfIllegal(Amount amount) throws ProtocolException {
+    if (!amount.isLegalTxOutputValue())
+      throw new ProtocolException("Illegal tx output amount " + amount + "BTC");
   }
 
   public long getSizeInBytes() {

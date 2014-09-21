@@ -1,31 +1,34 @@
 package org.bitj.wire.objects;
 
+import org.bitj.utils.Utils;
 import org.bitj.wire.BitcoinInputStream;
 import org.bitj.wire.BitcoinOutputStream;
-import org.bitj.wire.Wire;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
 import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class TxInput {
 
   private TxOutputPointer prevOutput;
   private TxScript script;
-  private long sequence = Wire.MAX_UINT_32; // http://bitcoin.stackexchange.com/questions/2025/what-is-txins-sequence
+  private long sequence = Utils.MAX_UINT_32; // http://bitcoin.stackexchange.com/questions/2025/what-is-txins-sequence
 
   public static final long MIN_SIZE = 42; // assuming script length of 1 byte
 
   public TxInput(TxOutputPointer prevOutput, TxScript script) {
-    this.prevOutput = prevOutput;
-    this.script = script;
+    this.prevOutput = checkNotNull(prevOutput);
+    this.script = checkNotNull(script);
   }
 
   public TxInput(TxOutputPointer prevOutput, TxScript script, long sequence) {
-    this.prevOutput = prevOutput;
-    this.script = script;
+    this.prevOutput = checkNotNull(prevOutput);
+    this.script = checkNotNull(script);
+    checkArgument(sequence >= 0);
     this.sequence = sequence;
   }
 

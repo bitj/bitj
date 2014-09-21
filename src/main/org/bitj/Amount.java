@@ -50,4 +50,8 @@ public class Amount {
     return Objects.hashCode(satoshi);
   }
 
+  public boolean isLegalTxOutputValue() {
+    return satoshi >= 0 && satoshi <= MAX_SATOSHI;
+  }
+
 }

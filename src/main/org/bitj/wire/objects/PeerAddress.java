@@ -9,6 +9,10 @@ import java.net.InetAddress;
 import java.util.Objects;
 
 import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.bitj.utils.Utils.MAX_UINT_16;
+import static org.bitj.utils.Utils.MAX_UINT_32;
 
 public class PeerAddress {
 
@@ -88,10 +92,18 @@ public class PeerAddress {
 
     public PeerAddress get() { return peerAddress; }
 
-    public Builder timestampOfTheLastMessage(long timestamp) { peerAddress.timestampOfTheLastMessage = timestamp; return this; }
+    public Builder timestampOfTheLastMessage(long timestamp) {
+      checkArgument(timestamp >= 0 && timestamp <= MAX_UINT_32);
+      peerAddress.timestampOfTheLastMessage = timestamp;
+      return this;
+    }
     public Builder services(long services) { peerAddress.services = services; return this; }
-    public Builder ip(InetAddress ip) { peerAddress.ip = ip; return this; }
-    public Builder port(int port) { peerAddress.port = port; return this; }
+    public Builder ip(InetAddress ip) { peerAddress.ip = checkNotNull(ip); return this; }
+    public Builder port(int port) {
+      checkArgument(port >= 0 && port <= MAX_UINT_16);
+      peerAddress.port = port;
+      return this;
+    }
   }
 
 }

@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Bytes;
 import org.bitj.BaseTest;
 import org.bitj.utils.Debug;
+import org.bitj.utils.Utils;
 import org.bitj.wire.BitcoinInputStream;
-import org.bitj.wire.Wire;
 import org.testng.annotations.Test;
 
 import java.net.ProtocolException;
@@ -37,22 +37,14 @@ public class TxTest extends BaseTest {
       "8B 4E CC 52 88 AC 00 00  00 00"
   );
 
-  static ImmutableList<TxInput> EMPTY_INPUTS = new ImmutableList.Builder<TxInput>().build();
-  static ImmutableList<TxOutput> EMPTY_OUTPUTS = new ImmutableList.Builder<TxOutput>().build();
   static TxInput TX_INPUT = new TxInput(TxInputTest.TX_OUTPUT_POINTER, TxInputTest.TX_SCRIPT);
   static TxOutput TX_OUTPUT = new TxOutput(1, TxOutputTest.TX_SCRIPT);
 
-  @Test
-  public void serializeEmpty() throws Exception {
-    Tx tx = new Tx(2, EMPTY_INPUTS, EMPTY_OUTPUTS, 257);
-    byte[] serialized = tx.serialize();
-    assertEquals(serialized, bytes(
-      "02 00 00 00" +  // version
-        "00" +           // 0 inputs
-        "00" +           // 0 outputs
-        "01 01 00 00"    // nLockTime
-    ));
-  }
+  static ImmutableList<TxInput> EMPTY_INPUTS = new ImmutableList.Builder<TxInput>().build();
+  static ImmutableList<TxOutput> EMPTY_OUTPUTS = new ImmutableList.Builder<TxOutput>().build();
+
+  static ImmutableList<TxInput> EXAMPLE_INPUTS = new ImmutableList.Builder<TxInput>().add(TX_INPUT).build();
+  static ImmutableList<TxOutput> EXAMPLE_OUTPUTS = new ImmutableList.Builder<TxOutput>().add(TX_OUTPUT).build();
 
   @Test
   public void serialize() throws Exception {
@@ -85,13 +77,13 @@ public class TxTest extends BaseTest {
     Tx.deserialize(in);
   }
 
-  @Test(expectedExceptions = ProtocolException.class, expectedExceptionsMessageRegExp = ".*0 inputs is illegal")
+  @Test(expectedExceptions = ProtocolException.class, expectedExceptionsMessageRegExp = ".*Tx without inputs is illegal.*")
   public void deserialize_zeroInputs() throws Exception {
     BitcoinInputStream in = bitcoinStream(messInputs(SERIALIZED));
     Tx.deserialize(in);
   }
 
-  @Test(expectedExceptions = ProtocolException.class, expectedExceptionsMessageRegExp = ".*0 outputs is illegal")
+  @Test(expectedExceptions = ProtocolException.class, expectedExceptionsMessageRegExp = ".*Tx without outputs is illegal.*")
   public void deserialize_zeroOutputs() throws Exception {
     BitcoinInputStream in = bitcoinStream(messOutputs(SERIALIZED));
     Tx.deserialize(in);
@@ -152,20 +144,13 @@ public class TxTest extends BaseTest {
     assertEquals(tx.getVersion(), 1);
 
     assertEquals(tx.getInputs().size(), 1);
-    assertEquals(tx.getInputs().get(0).getSequence(), Wire.MAX_UINT_32);
+    assertEquals(tx.getInputs().get(0).getSequence(), Utils.MAX_UINT_32);
 
     assertEquals(tx.getOutputs().size(), 2);
     assertEquals(tx.getOutputs().get(0).getSatoshi(), 5000000L);
     assertEquals(tx.getOutputs().get(1).getSatoshi(), 3354000000L);
 
     assertEquals(tx.getUnlockAfter(), 0);
-  }
-
-  @Test
-  public void sizeInBytesOfEmptyTx() throws Exception {
-    // empty tx still has version, locktime and numbers of inputs/outputs, thus 10 bytes
-    Tx tx = new Tx(EMPTY_INPUTS, EMPTY_OUTPUTS);
-    assertEquals(tx.getSizeInBytes(), 10);
   }
 
   @Test
@@ -188,7 +173,7 @@ public class TxTest extends BaseTest {
   @Test
   public void constructionInitializesUnlockAfterCorrectly() throws Exception {
     Instant threshold = Instant.parse("1985-11-05T00:53:20Z");
-    Tx tx = new Tx(1, EMPTY_INPUTS, EMPTY_OUTPUTS, threshold);
+    Tx tx = new Tx(1, EXAMPLE_INPUTS, EXAMPLE_OUTPUTS, threshold);
     assertEquals(tx.getUnlockAfter(), 500_000_000);
   }
 
@@ -205,7 +190,7 @@ public class TxTest extends BaseTest {
 
   @Test
   public void toStringImplemented() throws Exception {
-    Tx tx = new Tx(EMPTY_INPUTS, EMPTY_OUTPUTS);
+    Tx tx = new Tx(EXAMPLE_INPUTS, EXAMPLE_OUTPUTS);
     assertTrue(tx.toString().contains("Tx{"));
   }
 

@@ -5,6 +5,8 @@ import org.bitj.wire.objects.Tx;
 
 import java.io.IOException;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class TxMsg extends Msg {
 
   private Tx tx;
@@ -15,7 +17,7 @@ public class TxMsg extends Msg {
   }
 
   public TxMsg(Tx tx) {
-    this.tx = tx;
+    this.tx = checkNotNull(tx);
   }
 
   @Override

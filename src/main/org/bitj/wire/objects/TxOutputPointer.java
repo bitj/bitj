@@ -1,6 +1,7 @@
 package org.bitj.wire.objects;
 
 import org.bitj.Sha256Hash;
+import org.bitj.utils.Utils;
 import org.bitj.wire.BitcoinInputStream;
 import org.bitj.wire.BitcoinOutputStream;
 
@@ -9,6 +10,9 @@ import java.io.IOException;
 import java.util.Objects;
 
 import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.bitj.utils.Utils.MAX_UINT_32;
 
 /**
  * Used in transaction inputs to reference the previous transaction output.
@@ -20,6 +24,8 @@ public class TxOutputPointer {
   private long outputIndex;
 
   public TxOutputPointer(Sha256Hash txHash, long outputIndex) {
+    checkNotNull(txHash);
+    checkArgument(outputIndex >= 0 && outputIndex <= MAX_UINT_32);
     this.txHash = txHash;
     this.outputIndex = outputIndex;
   }

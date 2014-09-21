@@ -2,6 +2,10 @@ package org.bitj.wire.objects;
 
 import com.google.common.collect.ImmutableList;
 import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.bitj.utils.Utils.MAX_UINT_32;
+
 import org.bitj.Sha256Hash;
 import org.bitj.utils.Crypto;
 import org.bitj.utils.Utils;
@@ -180,13 +184,25 @@ public class Block {
       return block;
     }
 
-    public Builder version(long version) { block.version = version; return this; }
-    public Builder prevHash(Sha256Hash prevHash) { block.prevHash = prevHash; return this; }
-    public Builder mrklRoot(Sha256Hash mrklRoot) { block.mrklRoot = mrklRoot; return this; }
-    public Builder timestamp(long timestamp) { block.timestamp = timestamp; return this; }
-    public Builder compactTarget(long bits) { block.compactTarget = bits; return this; }
+    public Builder version(long version) {
+      checkArgument(version >= 0 && version <= MAX_UINT_32);
+      block.version = version;
+      return this;
+    }
+    public Builder prevHash(Sha256Hash prevHash) { block.prevHash = checkNotNull(prevHash); return this; }
+    public Builder mrklRoot(Sha256Hash mrklRoot) { block.mrklRoot = checkNotNull(mrklRoot); return this; }
+    public Builder timestamp(long timestamp) {
+      checkArgument(timestamp >= 0 && timestamp <= MAX_UINT_32);
+      block.timestamp = timestamp;
+      return this;
+    }
+    public Builder compactTarget(long bits) {
+      checkArgument(bits >= 0 && bits <= MAX_UINT_32, "Bits cannot be " + bits);
+      block.compactTarget = bits;
+      return this;
+    }
     public Builder nonce(long nonce) { block.nonce = nonce; return this; }
-    public Builder txns(ImmutableList<Tx> txns) { block.txns = txns; return this; }
+    public Builder txns(ImmutableList<Tx> txns) { block.txns = checkNotNull(txns); return this; }
     public Builder hash(Sha256Hash hash) { block.cachedHash = hash; return this; }
   }
 

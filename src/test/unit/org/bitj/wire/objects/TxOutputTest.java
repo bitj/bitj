@@ -32,7 +32,7 @@ public class TxOutputTest extends BaseTest {
     assertEquals(serialized, SERIALIZED_OUTPUT);
   }
 
-  @Test(expectedExceptions = ProtocolException.class, expectedExceptionsMessageRegExp = ".*< 0")
+  @Test(expectedExceptions = ProtocolException.class, expectedExceptionsMessageRegExp = ".*Illegal tx output amount.*")
   public void deserialize_whenValueIsNegative() throws Exception {
     BitcoinInputStream in = bitcoinStream(
       // -1 satoshi
@@ -46,7 +46,7 @@ public class TxOutputTest extends BaseTest {
     TxOutput.deserialize(in);
   }
 
-  @Test(expectedExceptions = ProtocolException.class, expectedExceptionsMessageRegExp = ".*> 21.*")
+  @Test(expectedExceptions = ProtocolException.class, expectedExceptionsMessageRegExp = ".*Illegal tx output amount.*")
   public void deserialize_whenValueIsLargerThan21MlnBTC() throws Exception {
     BitcoinInputStream in = bitcoinStream(
       // 21_000_001 satoshi

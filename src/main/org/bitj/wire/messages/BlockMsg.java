@@ -6,6 +6,7 @@ import org.bitj.wire.BitcoinInputStream;
 import java.io.IOException;
 
 import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class BlockMsg extends Msg {
 
@@ -17,7 +18,7 @@ public class BlockMsg extends Msg {
   }
 
   public BlockMsg(Block block) {
-    this.block = block;
+    this.block = checkNotNull(block);
   }
 
   @Override

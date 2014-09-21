@@ -12,6 +12,10 @@ import java.net.ProtocolException;
 import java.time.Instant;
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.bitj.utils.Utils.MAX_UINT_32;
+
 public class Tx {
 
   /*
@@ -47,11 +51,21 @@ public class Tx {
   public static final long MAX_NUMBER_OF_OUTPUTS = MAX_SIZE / TxOutput.MIN_SIZE;
 
   public Tx(ImmutableList<TxInput> inputs, ImmutableList<TxOutput> outputs) {
+    checkNotNull(inputs);
+    checkArgument(!inputs.isEmpty());
+    checkNotNull(outputs);
+    checkArgument(!outputs.isEmpty());
     this.inputs = inputs;
     this.outputs = outputs;
   }
 
   public Tx(long version, ImmutableList<TxInput> inputs, ImmutableList<TxOutput> outputs, long unlockAfterBlock) {
+    checkArgument(version >= 0 && version <= MAX_UINT_32);
+    checkNotNull(inputs);
+    checkArgument(!inputs.isEmpty());
+    checkNotNull(outputs);
+    checkArgument(!outputs.isEmpty());
+    checkArgument(unlockAfterBlock >= 0 && unlockAfterBlock <= MAX_UINT_32);
     this.version = version;
     this.inputs = inputs;
     this.outputs = outputs;
@@ -59,6 +73,12 @@ public class Tx {
   }
 
   public Tx(long version, ImmutableList<TxInput> inputs, ImmutableList<TxOutput> outputs, Instant unlockAfterTimestamp) {
+    checkArgument(version >= 0 && version <= MAX_UINT_32);
+    checkNotNull(inputs);
+    checkArgument(!inputs.isEmpty());
+    checkNotNull(outputs);
+    checkArgument(!outputs.isEmpty());
+    checkNotNull(unlockAfterTimestamp);
     this.version = version;
     this.inputs = inputs;
     this.outputs = outputs;
@@ -125,15 +145,15 @@ public class Tx {
   }
 
   private static void throwIfNumberOfInputsIsInvalid(BigInteger nOfInputs) throws ProtocolException {
-    if (nOfInputs.equals(BigInteger.ZERO))
-      throw new ProtocolException("Tx with 0 inputs is illegal");
+    if (nOfInputs.compareTo(BigInteger.ZERO) <= 0)
+      throw new TooMany("Tx without inputs is illegal");
     if (nOfInputs.compareTo(BigInteger.valueOf(MAX_NUMBER_OF_INPUTS)) > 0)
       throw new TooMany("Too many claimed inputs in tx " + nOfInputs + " > " + MAX_NUMBER_OF_INPUTS);
   }
 
   private static void throwIfNumberOfOutputsIsInvalid(BigInteger nOfOutputs) throws ProtocolException {
     if (nOfOutputs.equals(BigInteger.ZERO))
-      throw new ProtocolException("Tx with 0 outputs is illegal");
+      throw new ProtocolException("Tx without outputs is illegal");
     if (nOfOutputs.compareTo(BigInteger.valueOf(MAX_NUMBER_OF_OUTPUTS)) > 0)
       throw new TooMany("Too many claimed outputs in tx " + nOfOutputs + " > " + MAX_NUMBER_OF_OUTPUTS);
   }

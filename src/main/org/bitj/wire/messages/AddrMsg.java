@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import static com.google.common.base.Objects.ToStringHelper;
 import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class AddrMsg extends Msg {
 
@@ -24,7 +25,7 @@ public class AddrMsg extends Msg {
   }
 
   public AddrMsg(ImmutableSet<PeerAddress> peers) {
-    this.peers = peers;
+    this.peers = checkNotNull(peers);
   }
 
   @Override

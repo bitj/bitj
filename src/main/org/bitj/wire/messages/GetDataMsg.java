@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import static com.google.common.base.Objects.ToStringHelper;
 import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class GetDataMsg extends Msg {
 
@@ -24,7 +25,7 @@ public class GetDataMsg extends Msg {
   }
 
   public GetDataMsg(ImmutableSet<InvItem> invItems) {
-    this.invItems = invItems;
+    this.invItems = checkNotNull(invItems);
   }
 
   @Override

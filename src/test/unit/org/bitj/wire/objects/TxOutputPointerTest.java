@@ -2,8 +2,8 @@ package org.bitj.wire.objects;
 
 import org.bitj.BaseTest;
 import org.bitj.Sha256Hash;
+import org.bitj.utils.Utils;
 import org.bitj.wire.BitcoinInputStream;
-import org.bitj.wire.Wire;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -39,7 +39,7 @@ public class TxOutputPointerTest extends BaseTest {
       // output index
       255, 255, 255, 255
     );
-    TxOutputPointer txOutputPointer = new TxOutputPointer(HASH, Wire.MAX_UINT_32);
+    TxOutputPointer txOutputPointer = new TxOutputPointer(HASH, Utils.MAX_UINT_32);
     assertEquals(TxOutputPointer.deserialize(in), txOutputPointer);
   }
 

@@ -12,6 +12,9 @@ import java.util.Date;
 import java.util.Objects;
 
 import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.bitj.utils.Utils.MAX_UINT_32;
 
 public class VersionMsg extends Msg {
 
@@ -21,7 +24,7 @@ public class VersionMsg extends Msg {
   // Identifies protocol version being used by the node
   private int version = PROTOCOL_VERSION;
 
-  // Bitfield of features to be enabled for this connection
+  // Bitfield of features to be enabled for this connection. Not meant to be interpreted as a number.
   private long services = 1;
 
   // Standard UNIX timestamp in seconds
@@ -154,13 +157,25 @@ public class VersionMsg extends Msg {
 
     public VersionMsg get() { return versionMessage; }
 
-    public Builder version(int version) { versionMessage.version = version; return this; }
+    public Builder version(int version) {
+      checkArgument(version >= 0 && version <= MAX_UINT_32);  // version int is likely to be changed to uint in bitcoin core for consistency
+      versionMessage.version = version;
+      return this;
+    }
     public Builder services(long services) { versionMessage.services = services; return this; }
-    public Builder timestamp(long timestamp) { versionMessage.timestamp = timestamp; return this; }
+    public Builder timestamp(long timestamp) {
+      checkArgument(timestamp >= 0);
+      versionMessage.timestamp = timestamp;
+      return this;
+    }
     public Builder nonce(long nonce) { versionMessage.nonce = nonce; return this; }
-    public Builder replaceUserAgent(String userAgent) { versionMessage.userAgent = userAgent; return this; }
-    public Builder userAgent(String postfix) { versionMessage.userAgent += "/" + postfix; return this; }
-    public Builder startHeight(int startHeight) { versionMessage.startHeight = startHeight; return this; }
+    public Builder replaceUserAgent(String userAgent) { versionMessage.userAgent = checkNotNull(userAgent); return this; }
+    public Builder userAgent(String postfix) { versionMessage.userAgent += "/" + checkNotNull(postfix); return this; }
+    public Builder startHeight(int startHeight) {
+      checkArgument(startHeight >= 0);
+      versionMessage.startHeight = startHeight;
+      return this;
+    }
     public Builder relayToMeAllTransactions(boolean relay) { versionMessage.relayToMeAllTransactions = relay; return this; }
   }
 

@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableList;
 import org.bitj.BaseTest;
 import org.bitj.Sha256Hash;
 import org.bitj.utils.JarFileLoader;
+import org.bitj.utils.Utils;
 import org.bitj.wire.BitcoinInputStream;
-import org.bitj.wire.Wire;
 import org.testng.annotations.Test;
 
 import java.net.ProtocolException;
@@ -48,9 +48,9 @@ public class BlockTest extends BaseTest {
       version(2).
       prevHash(Sha256Hash.ZERO).
       mrklRoot(Sha256Hash.ONE).
-      timestamp(Wire.MAX_UINT_32).
-      compactTarget(Wire.MAX_UINT_32 - 1).
-      nonce(Wire.MAX_UINT_32 - 2).
+      timestamp(Utils.MAX_UINT_32).
+      compactTarget(Utils.MAX_UINT_32 - 1).
+      nonce(Utils.MAX_UINT_32 - 2).
       get();
     byte[] serialized = empty.serialize();
     assertEquals(serialized, bytes(

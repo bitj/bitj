@@ -5,14 +5,9 @@ import com.google.common.primitives.UnsignedLongs;
 
 import java.math.BigInteger;
 
-import static org.bitj.utils.Utils.getBytesASCII;
-import static org.bitj.utils.Utils.getBytesUTF8;
+import static org.bitj.utils.Utils.*;
 
 public class Wire {
-
-  public static final long MAX_UINT_16 = 256L * 256L - 1;
-  public static final long MAX_UINT_32 = 256L * 256L * 256L * 256L - 1;
-  public static final BigInteger MAX_UINT_64 = new BigInteger("18446744073709551615");
 
   public static byte[] int32ToBytesLE(int val) {
     return new byte[] {

@@ -13,6 +13,8 @@ import java.math.BigInteger;
 import java.net.ProtocolException;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class HeadersMsg extends Msg {
 
   public static final int MAX_HEADERS = 2000;
@@ -26,7 +28,7 @@ public class HeadersMsg extends Msg {
   }
 
   public HeadersMsg(ImmutableList<Block> blocks) {
-    this.blocks = blocks;
+    this.blocks = checkNotNull(blocks);
   }
 
   @Override

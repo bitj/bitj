@@ -11,6 +11,9 @@ import java.math.BigInteger;
 import java.net.ProtocolException;
 import java.util.Arrays;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class TxScript {
 
   /**
@@ -31,6 +34,8 @@ public class TxScript {
   private byte[] bytes;
 
   public TxScript(byte[] bytes) {
+    checkNotNull(bytes);
+    checkArgument(bytes.length <= MAX_SIZE);
     this.bytes = bytes;
   }
 
